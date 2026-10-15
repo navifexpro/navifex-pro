@@ -25,8 +25,8 @@
       if (st.bad) return;
       var tx = u.searchParams.get("text") || "Hi Navifex Pro!";
       tx = tx.replace(/\s*\(Referral code:[^)]*\)\s*$/, "");
-      u.searchParams.set("text", tx + "\n" + line());
-      if (a.href !== u.toString()) a.href = u.toString();
+      var nh = "https://wa.me/" + NUM + "?text=" + encodeURIComponent(tx + "\n" + line());
+      if (a.href !== nh) a.href = nh;
     } catch (e) {}
   }
   function all() { document.querySelectorAll('a[href*="wa.me/"]').forEach(fix); }

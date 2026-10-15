@@ -121,7 +121,7 @@ $("pName").textContent=d.name||"";$("pCode").textContent=d.id;$("pLink").value=d
 var t=d.totals||{};$("sClients").textContent=t.clients||0;$("sSales").textContent=rs(t.sales);$("sEarned").textContent=rs(t.earned);$("sPaid").textContent=rs(t.paid);$("sBal").textContent=rs(t.balance);
 $("pOrders").innerHTML=(d.orders||[]).length?"<table><tr><th>Date</th><th>Service</th><th>Paid by client</th><th>Your commission</th></tr>"+d.orders.map(function(o){return "<tr><td>"+esc(o.date)+"</td><td>"+esc(o.service)+"</td><td>"+rs(o.amount)+"</td><td>"+rs(o.commission)+"</td></tr>";}).join("")+"</table>":"<p style='color:var(--muted)'>No orders yet. Share your post and link to get your first client.</p>";
 $("pPays").innerHTML=(d.payouts||[]).length?"<table><tr><th>Date</th><th>Amount</th><th>Method</th></tr>"+d.payouts.map(function(p){return "<tr><td>"+esc(p.date)+"</td><td>"+rs(p.amount)+"</td><td>"+esc(p.method)+"</td></tr>";}).join("")+"</table>":"<p style='color:var(--muted)'>No payments yet.</p>";
-nvxKit($("kit"),{code:d.id,link:d.link});
+(function go(n){if(window.nvxKit)nvxKit($("kit"),{code:d.id,link:d.link});else if(n<100)setTimeout(function(){go(n+1)},100);})(0);
 $("pLoad").style.display="none";$("pBody").style.display="";if(window.ScrollTrigger)ScrollTrigger.refresh();
 }).catch(function(e){$("pMsg").innerHTML=String(e.message)==="not_found"?'We could not find this partner link. Please check it, or message us on <a href="https://wa.me/923130111349" style="text-decoration:underline">WhatsApp</a>.':"Could not load right now. Please refresh in a minute.";});
 })();
@@ -161,8 +161,8 @@ $("pLoad").style.display="none";$("pBody").style.display="";if(window.ScrollTrig
 <script src="/js/vendor/ScrollTrigger.min.js"></script>
 <script src="/js/vendor/lenis.min.js"></script>
 <script src="/js/main.js?v=3"></script>
-<script src="/js/kit.js?v=1"></script>
+<script src="/js/kit.js?v=2"></script>
 <script src="https://bot.navifexpro.com/widget.js?v=3" data-brand="navifex" data-bottom="92" defer></script>
-<script src="/js/ref.js?v=1" defer></script>
+<script src="/js/ref.js?v=2" defer></script>
 </body>
 </html>

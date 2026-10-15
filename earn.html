@@ -133,7 +133,7 @@ if(typeof gtag==="function")gtag("event","sign_up",{method:"affiliate"});
 try{localStorage.setItem("nvx_partner",JSON.stringify({id:d.id,dash:d.dashboard}));}catch(e){}
 document.getElementById("dName").textContent=d.name||"";document.getElementById("dCode").textContent=d.id;
 document.getElementById("dLink").value=d.link;document.getElementById("dDash").value=d.dashboard;document.getElementById("dDashGo").href=d.dashboard;
-nvxKit(document.getElementById("kit"),{code:d.id,link:d.link});
+(function go(n){if(window.nvxKit)nvxKit(document.getElementById("kit"),{code:d.id,link:d.link});else if(n<100)setTimeout(function(){go(n+1)},100);})(0);
 F.style.display="none";var dn=document.getElementById("earnDone");dn.classList.add("on");dn.scrollIntoView({block:"start"});
 }).catch(function(err){var m=String(err.message);msg.className="fx-msg bad";msg.textContent=m.indexOf("too_many")>=0?"Too many tries, please wait a few minutes.":m.indexOf("bad_whatsapp")>=0?"Please enter a valid WhatsApp number.":"Could not register right now. Please try again, or message us on WhatsApp: +92 313 0111349.";}).then(function(){btn.disabled=false;});
 });})();
@@ -173,8 +173,8 @@ F.style.display="none";var dn=document.getElementById("earnDone");dn.classList.a
 <script src="/js/vendor/ScrollTrigger.min.js"></script>
 <script src="/js/vendor/lenis.min.js"></script>
 <script src="/js/main.js?v=3"></script>
-<script src="/js/kit.js?v=1"></script>
+<script src="/js/kit.js?v=2"></script>
 <script src="https://bot.navifexpro.com/widget.js?v=3" data-brand="navifex" data-bottom="92" defer></script>
-<script src="/js/ref.js?v=1" defer></script>
+<script src="/js/ref.js?v=2" defer></script>
 </body>
 </html>
