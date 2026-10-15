@@ -185,6 +185,7 @@ function callBot(){if(busy){again=true;return}busy=true;typing(true);
   .then(function(r){return r.json().catch(function(){return {}})}).then(function(d){
     S.ui.forEach(function(u){if(u.side==="out"&&!u.seen){u.seen=true;if(u.el)refresh(u)}});
     var reply=d.reply||"Maazrat, connection ka masla aa gaya. Dobara bhejein ya WhatsApp karein: https://wa.me/923130111349";
+    if(d.reply&&S.msgs.length>sentCount){return}
     typing(false);
     var parts=reply.split(/\n{2,}/).filter(Boolean);if(parts.length>3)parts=[reply];
     parts.forEach(function(p,k){setTimeout(function(){add({side:"in",type:"text",text:p})},k*450)});
