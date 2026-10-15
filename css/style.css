@@ -448,17 +448,17 @@ a.c-item:hover{border-color:var(--blue2);background:rgba(47,123,255,.08)}
 @media (max-width:640px){.steps-line{display:none}}
 
 /* =====================  v3 — editorial layer  ===================== */
-h1 em,h2 em,h3 em,.statement em,.cta-band h2 em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.01em;
+h1 em,h2 em,h3 em,.statement em,.cta-band h2 em{font-family:inherit;font-style:normal;font-weight:inherit;letter-spacing:inherit;
   background:linear-gradient(100deg,#cfe2ff 0%,var(--blue2) 45%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
 h1 em .w>span,h2 em .w>span,.statement em .w>span,h1 em .ch{background:linear-gradient(100deg,#cfe2ff 0%,var(--blue2) 50%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}
-.hero h1 em{font-size:1.08em;line-height:.9}
+.hero h1 em{font-size:1em;line-height:inherit}
 .hero h1{max-width:12ch;letter-spacing:-.035em}
 .hero .lead{max-width:560px}
 h2{letter-spacing:-.03em}
-.page-hero h1 em{font-size:1.06em}
+.page-hero h1 em{font-size:1em}
 .hero .split em.shimmer .w>span{background:linear-gradient(100deg,#e3eeff 0%,var(--blue2) 30%,var(--cyan) 45%,#e3eeff 55%,var(--blue2) 75%,var(--cyan));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 7s linear infinite}
 .marquee-track span{font-family:var(--f-head)}
-.marquee-track span.o{font-family:var(--f-serif);font-style:italic;font-weight:400;-webkit-text-stroke:0;color:rgba(160,195,255,.55);letter-spacing:0}
+.marquee-track span.o{font-family:var(--f-head);font-style:normal;-webkit-text-stroke:0;color:rgba(160,195,255,.55)}
 .statement p{font-size:clamp(32px,5vw,72px);max-width:20ch;line-height:1.08}
 .statement{padding-top:clamp(110px,14vw,190px)}
 /* less glow, more restraint */
@@ -509,3 +509,17 @@ h2{letter-spacing:-.03em}
   .ir-n,.ir-go{display:none}.ir-desc{font-size:14px}.ir-name{font-size:24px}
 }
 .funnel-sec{background:linear-gradient(180deg,transparent,rgba(13,22,43,.55),transparent)}
+
+/* ===== fixes (Oct 2026) ===== */
+/* footer wordmark: paint the gradient on one layer only (the split .ch letters) so the
+   parent/word layers can't render a second, offset copy of the text */
+.f-big{letter-spacing:.01em}
+.f-big.split,.f-big .w>span{background:none}
+.f-big .ch{background:linear-gradient(180deg,rgba(90,162,255,.45),rgba(90,162,255,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* keep footer bottom row (Privacy Policy) clear of the fixed WhatsApp button */
+.site-footer{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+/* industry previews: keep the headline + product of the square beauty post in frame */
+.ind-card .ph img[src*="post-glowra-1"],.ind-follow img[src*="post-glowra-1"]{object-position:50% 6%}
+.ind-card .ph img[src*="post-brewlane-1"],.ind-follow img[src*="post-brewlane-1"]{object-position:50% 90%}
+.ind-card .ph img[src*="post-mehr-1"],.ind-follow img[src*="post-mehr-1"]{object-position:50% 95%}
+.ind-card .ph img[src*="post-verdant-1"],.ind-follow img[src*="post-verdant-1"]{object-position:50% 55%}
