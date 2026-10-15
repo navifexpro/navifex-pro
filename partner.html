@@ -103,30 +103,9 @@
 .fx-note{margin:0;padding:12px 14px;border-radius:12px;background:rgba(47,123,255,.1);border:1px solid rgba(90,162,255,.3);color:#cfe0ff;font-size:14px}
 </style><section class="section" style="padding-top:10px"><div class="wrap fx" style="max-width:1000px">
 <div class="fx-card" id="pLoad"><p class="hint" id="pMsg" style="color:var(--muted)">Loading...</p></div>
-<div id="pBody" style="display:none"><div class="fx-card" style="text-align:center"><h2>Hi <span id="pName"></span></h2><p class="hint" style="color:var(--muted)">Your referral and discount code:</p><div class="fx-code" id="pCode"></div><p style="margin:18px 0 4px;font-weight:600">Your referral link</p><div class="fx-copy"><input type="text" id="pLink" readonly aria-label="Your referral link"><button type="button" class="btn btn-ghost" data-copy="pLink">Copy</button></div><p id="pStatus" style="color:var(--muted);margin-top:10px"></p></div><div class="fx-card"><h2>Summary</h2><p class="hint">You get 10% of every payment your clients make, paid to you as soon as their payment reaches us.</p><div class="fx-stats"><div class="fx-stat"><small>Clients</small><b id="sClients">0</b></div><div class="fx-stat"><small>Total sales</small><b id="sSales">Rs 0</b></div><div class="fx-stat"><small>Commission earned</small><b id="sEarned">Rs 0</b></div><div class="fx-stat"><small>Paid to you</small><b id="sPaid">Rs 0</b></div><div class="fx-stat"><small>Balance due</small><b id="sBal">Rs 0</b></div></div></div><div class="fx-card"><h2>Orders with your code</h2><div class="fx-table" id="pOrders"></div></div><div class="fx-card"><h2>Payments to you</h2><div class="fx-table" id="pPays"></div></div><div class="fx-card" style="text-align:center"><h3 style="margin-top:34px;font-family:var(--f-head)">Your status post</h3><p class="hint" style="color:var(--muted)">Download it and put it on your WhatsApp status, Instagram story or Facebook. Add your link in the caption.</p><img class="fx-img" id="stImg" alt="Your Navifex discount code status post"><div class="btn-row" style="justify-content:center"><a class="btn btn-primary magnetic" id="stDl" href="#"><span>Download post</span></a><button type="button" class="btn btn-ghost" id="stShare" style="display:none"><span>Share</span></button><a class="btn btn-ghost" id="stWa" target="_blank" rel="noopener" href="#"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.3 23.7l6.1-1.6A11.8 11.8 0 0 0 24 12a11.7 11.7 0 0 0-3.5-8.5zM12 21.6a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.6 1 1-3.5-.3-.4A9.8 9.8 0 1 1 12 21.6zm5.4-7.3c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.3 3.3 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.3 13.3 0 0 0 5.1 4.5c1.9.8 2.6.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3z"/></svg><span>Share link on WhatsApp</span></a></div></div></div>
+<div id="pBody" style="display:none"><div class="fx-card" style="text-align:center"><h2>Hi <span id="pName"></span></h2><p class="hint" style="color:var(--muted)">Your referral and discount code:</p><div class="fx-code" id="pCode"></div><p style="margin:18px 0 4px;font-weight:600">Your referral link</p><div class="fx-copy"><input type="text" id="pLink" readonly aria-label="Your referral link"><button type="button" class="btn btn-ghost" data-copy="pLink">Copy</button></div><p id="pStatus" style="color:var(--muted);margin-top:10px"></p></div><div class="fx-card"><h2>Summary</h2><p class="hint">You get 20% of every payment your clients make, paid to you as soon as their payment reaches us.</p><div class="fx-stats"><div class="fx-stat"><small>Clients</small><b id="sClients">0</b></div><div class="fx-stat"><small>Total sales</small><b id="sSales">Rs 0</b></div><div class="fx-stat"><small>Commission earned</small><b id="sEarned">Rs 0</b></div><div class="fx-stat"><small>Paid to you</small><b id="sPaid">Rs 0</b></div><div class="fx-stat"><small>Balance due</small><b id="sBal">Rs 0</b></div></div></div><div class="fx-card"><h2>Orders with your code</h2><div class="fx-table" id="pOrders"></div></div><div class="fx-card"><h2>Payments to you</h2><div class="fx-table" id="pPays"></div></div><div class="fx-card" style="text-align:center"><div id="kit" style="margin-top:34px;text-align:left"></div></div></div>
 </div></section>
 <script>
-function nvxStatus(code,link){var W=1080,H=1920,c=document.createElement("canvas");c.width=W;c.height=H;var x=c.getContext("2d");
-var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0a1430");g.addColorStop(.55,"#060a14");g.addColorStop(1,"#0b1d44");x.fillStyle=g;x.fillRect(0,0,W,H);
-function glow(cx,cy,r,col){var q=x.createRadialGradient(cx,cy,0,cx,cy,r);q.addColorStop(0,col);q.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=q;x.fillRect(0,0,W,H);}
-glow(880,260,620,"rgba(47,123,255,.45)");glow(120,1500,620,"rgba(127,208,255,.25)");
-x.textAlign="center";var H1='"Bricolage Grotesque",system-ui,sans-serif',B='Manrope,system-ui,sans-serif',MO='"JetBrains Mono",monospace';
-function wrap(t,y,size,font,col,lh){x.font=font.replace("S",size+"px");x.fillStyle=col;var words=t.split(" "),line="",lines=[];words.forEach(function(w){var tt=line?line+" "+w:w;if(x.measureText(tt).width>W-160){lines.push(line);line=w;}else line=tt;});lines.push(line);lines.forEach(function(l,i){x.fillText(l,W/2,y+i*lh);});return y+lines.length*lh;}
-x.font="700 44px "+H1;x.fillStyle="#9cc4ff";x.fillText("NAVIFEX PRO",W/2,190);
-var y=wrap("Business ko online grow karna hai?",420,96,"800 S "+H1,"#ffffff",112);
-y=wrap("Website, social media, ads, content aur AI chatbots \u2014 sab aik jaga.",y+40,46,"500 S "+B,"#c3d1ee",62);
-x.fillStyle="#2f7bff";var bw=760,bh=110,bx=(W-bw)/2,by=y+90;x.beginPath();x.roundRect(bx,by,bw,bh,55);x.fill();
-x.font="800 60px "+H1;x.fillStyle="#fff";x.fillText("GET 5% OFF",W/2,by+78);
-y=by+bh+120;x.font="600 40px "+B;x.fillStyle="#93a3c4";x.fillText("Mera discount code use karein",W/2,y);
-x.setLineDash([18,14]);x.lineWidth=5;x.strokeStyle="#5aa2ff";x.fillStyle="rgba(8,16,34,.9)";var cw=820,ch=200,cx=(W-cw)/2,cy=y+40;x.beginPath();x.roundRect(cx,cy,cw,ch,36);x.fill();x.stroke();x.setLineDash([]);
-x.font="700 120px "+MO;x.fillStyle="#fff";x.fillText(code,W/2,cy+142);
-y=cy+ch+110;x.font="600 38px "+B;x.fillStyle="#c3d1ee";x.fillText("Link pe click karein ya code WhatsApp pe batayein:",W/2,y);
-x.font="700 40px "+MO;x.fillStyle="#7fd0ff";x.fillText(link.replace("https://",""),W/2,y+70);
-x.font="700 46px "+H1;x.fillStyle="#fff";x.fillText("WhatsApp: 0313 0111349",W/2,H-190);
-x.font="500 34px "+B;x.fillStyle="#93a3c4";x.fillText("navifexpro.com",W/2,H-125);return c;}
-function nvxReady(){return (document.fonts&&document.fonts.load)?Promise.all(['800 96px "Bricolage Grotesque"','700 44px "Bricolage Grotesque"','500 46px Manrope','600 40px Manrope','700 120px "JetBrains Mono"'].map(function(f){return document.fonts.load(f).catch(function(){});})):Promise.resolve();}
-function nvxShowImg(code,link,img,dl,share){nvxReady().then(function(){var c=nvxStatus(code,link);var url=c.toDataURL("image/png");img.src=url;dl.href=url;dl.download="navifex-"+code+".png";
-if(share){c.toBlob(function(b){var file=new File([b],"navifex-"+code+".png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[file]})){share.style.display="";share.onclick=function(){navigator.share({files:[file],text:"5% off at Navifex Pro with my code "+code+": "+link}).catch(function(){});};}});}});}
 function nvxCopy(inp,btn){inp.select();var done=function(){var t=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=t;},1500);};if(navigator.clipboard)navigator.clipboard.writeText(inp.value).then(done,function(){document.execCommand("copy");done();});else{document.execCommand("copy");done();}}
 (function(){
 var k=(location.hash.match(/k=([0-9a-f]{24})/)||location.search.match(/k=([0-9a-f]{24})/)||[])[1];
@@ -142,8 +121,7 @@ $("pName").textContent=d.name||"";$("pCode").textContent=d.id;$("pLink").value=d
 var t=d.totals||{};$("sClients").textContent=t.clients||0;$("sSales").textContent=rs(t.sales);$("sEarned").textContent=rs(t.earned);$("sPaid").textContent=rs(t.paid);$("sBal").textContent=rs(t.balance);
 $("pOrders").innerHTML=(d.orders||[]).length?"<table><tr><th>Date</th><th>Service</th><th>Paid by client</th><th>Your commission</th></tr>"+d.orders.map(function(o){return "<tr><td>"+esc(o.date)+"</td><td>"+esc(o.service)+"</td><td>"+rs(o.amount)+"</td><td>"+rs(o.commission)+"</td></tr>";}).join("")+"</table>":"<p style='color:var(--muted)'>No orders yet. Share your post and link to get your first client.</p>";
 $("pPays").innerHTML=(d.payouts||[]).length?"<table><tr><th>Date</th><th>Amount</th><th>Method</th></tr>"+d.payouts.map(function(p){return "<tr><td>"+esc(p.date)+"</td><td>"+rs(p.amount)+"</td><td>"+esc(p.method)+"</td></tr>";}).join("")+"</table>":"<p style='color:var(--muted)'>No payments yet.</p>";
-$("stWa").href="https://wa.me/?text="+encodeURIComponent("Business ko online grow karna hai? Website, social media, ads aur content, sab Navifex Pro se. Mere code "+d.id+" se 5% off milega: "+d.link);
-nvxShowImg(d.id,d.link,$("stImg"),$("stDl"),$("stShare"));
+nvxKit($("kit"),{code:d.id,link:d.link});
 $("pLoad").style.display="none";$("pBody").style.display="";if(window.ScrollTrigger)ScrollTrigger.refresh();
 }).catch(function(e){$("pMsg").innerHTML=String(e.message)==="not_found"?'We could not find this partner link. Please check it, or message us on <a href="https://wa.me/923130111349" style="text-decoration:underline">WhatsApp</a>.':"Could not load right now. Please refresh in a minute.";});
 })();
@@ -183,6 +161,8 @@ $("pLoad").style.display="none";$("pBody").style.display="";if(window.ScrollTrig
 <script src="/js/vendor/ScrollTrigger.min.js"></script>
 <script src="/js/vendor/lenis.min.js"></script>
 <script src="/js/main.js?v=3"></script>
-<script src="https://bot.navifexpro.com/widget.js?v=2" data-brand="navifex" data-bottom="92" defer></script>
+<script src="/js/kit.js?v=1"></script>
+<script src="https://bot.navifexpro.com/widget.js?v=3" data-brand="navifex" data-bottom="92" defer></script>
+<script src="/js/ref.js?v=1" defer></script>
 </body>
 </html>
