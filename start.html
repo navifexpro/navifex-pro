@@ -218,9 +218,13 @@ $("att").addEventListener("click",function(e){var b=e.target.closest("button");i
 // ---- uploads
 function b64(blob){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(",")[1])};r.onerror=no;r.readAsDataURL(blob)})}
 function upload(blob,name,mime,u){u.up="Uploading…";refresh(u);
-  return b64(blob).then(function(data){return fetch(API+"/api/intake-upload",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sid:S.sid,name:name,mime:mime,data:data})})})
-  .then(function(r){return r.json().catch(function(){return {}})}).then(function(d){if(!d.ok)throw new Error(d.error||"x");u.up="";u.url=d.url;if(d.folder)S.media=d.folder;refresh(u);return d})
-  .catch(function(){u.up="!Upload nahi hua. WhatsApp par bhej dein.";refresh(u);return null})}
+  function send(data,n){return fetch(API+"/api/intake-upload",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sid:S.sid,ref:ref,name:name,mime:mime||"application/octet-stream",data:data})})
+    .then(function(r){return r.json().catch(function(){return {error:"http_"+r.status}})})
+    .then(function(d){if(d.ok)return d;var e=new Error(d.error||"x");if(n<2&&d.error!=="too_big"&&d.error!=="bad_data"){return new Promise(function(ok){setTimeout(ok,2000*(n+1))}).then(function(){return send(data,n+1)})}throw e},
+      function(e){if(n<2)return new Promise(function(ok){setTimeout(ok,2000*(n+1))}).then(function(){return send(data,n+1)});throw e})}
+  return b64(blob).then(function(data){return send(data,0)})
+  .then(function(d){u.up="";u.url=d.url;if(d.folder)S.media=d.folder;refresh(u);return d})
+  .catch(function(e){var m=e&&e.message==="too_big"?"!File 20MB se bari hai. Choti file bhejein ya WhatsApp kar dein.":e&&e.message==="too_many"?"!Bohat saari files ek saath. 2 minute baad dobara bhejein.":"!Upload nahi hua (internet). Dobara bhejein ya WhatsApp kar dein.";u.up=m;refresh(u);return null})}
 function shrink(file){return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(1,1024/Math.max(img.width,img.height));var c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.8).split(",")[1])};img.onerror=function(){ok(null)};img.src=URL.createObjectURL(file)})}
 function sendFile(f){if(f.size>MAX){toast("File 20MB se bari hai. WhatsApp par bhej dein.");return}
   var mime=f.type||"application/octet-stream",kind=/^image\//.test(mime)?"image":/^video\//.test(mime)?"video":"file";
