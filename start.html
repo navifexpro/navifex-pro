@@ -250,7 +250,8 @@ function stopRec(send){if(!rec)return;var r=rec,dur=Math.max(1,Math.round((Date.
     var u=add({side:"out",type:"voice",dur:d,local:URL.createObjectURL(blob)});
     setTimeout(function(){var tr=said.trim();
       upload(blob,"voice-note-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+"."+ext,mime,u).then(function(ok){
-        pushUser("[Voice note "+d+(ok?", saved for the team":", upload failed")+(tr?'. Transcript: "'+tr+'"':". No transcript")+"]")})},sr?700:0)};
+        if(ok&&ok.transcript)tr=ok.transcript;
+        pushUser("[Voice note "+d+(ok?", saved for the team":", upload failed")+(ok&&ok.voiceover?" (voiceover recording)":"")+(tr?'. Transcript: "'+tr+'"':". No transcript")+"]")})},sr?700:0)};
   r.stop()}
 $("recX").onclick=function(){stopRec(false)};
 render();sync();
