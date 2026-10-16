@@ -137,6 +137,11 @@ function rid(){var a=new Uint8Array(12);crypto.getRandomValues(a);return [].map.
 function load(){try{var s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.sid&&Date.now()-s.t<30*864e5)return s}catch(e){}return {sid:rid(),t:Date.now(),msgs:[],ui:[],media:"",lang:"ur"}}
 function save(){S.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify({sid:S.sid,t:S.t,msgs:S.msgs.map(function(m){return {role:m.role,content:m.content}}),ui:S.ui.map(function(u){var c={};for(var k in u)if(k!=="local"&&k!=="el")c[k]=u[k];return c}),media:S.media,lang:S.lang}))}catch(e){}}
 S=load();
+var CID=new URLSearchParams(location.search).get("c");
+if(CID&&/^[a-z0-9]{16,40}$/.test(CID)&&S.sid!==CID){S={sid:CID,t:Date.now(),msgs:[],ui:[],media:API+"/m/c/"+CID,lang:"ur"};save();
+  fetch(API+"/api/intake-history?sid="+CID).then(function(r){return r.json()}).then(function(d){if(!d.lines||S.msgs.length)return;
+    d.lines.forEach(function(l){var me=l.r==="user";S.msgs.push({role:me?"user":"assistant",content:String(l.t||"")});S.ui.push({side:me?"out":"in",type:"text",text:String(l.t||""),ts:Date.now(),seen:true})});
+    save();render()}).catch(function(){})}
 var ref=null;try{var q=new URLSearchParams(location.search).get("ref");if(q&&/^NVX-[A-Za-z0-9]{4}$/.test(q))ref=q.toUpperCase();else{var r=JSON.parse(localStorage.getItem("nvx_ref")||"null");if(r&&Date.now()-r.t<60*864e5)ref=r.c}}catch(e){}
 var pre=(new URLSearchParams(location.search).get("service")||"").split(",")[0];
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
