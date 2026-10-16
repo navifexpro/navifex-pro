@@ -523,3 +523,42 @@ h2{letter-spacing:-.03em}
 .ind-card .ph img[src*="post-brewlane-1"],.ind-follow img[src*="post-brewlane-1"]{object-position:50% 90%}
 .ind-card .ph img[src*="post-mehr-1"],.ind-follow img[src*="post-mehr-1"]{object-position:50% 95%}
 .ind-card .ph img[src*="post-verdant-1"],.ind-follow img[src*="post-verdant-1"]{object-position:50% 55%}
+
+/* ===== audit fixes v5 (Oct 2026) ===== */
+/* Highlighted heading words: solid colour, no background-clip:text.
+   Chrome (desktop + Android) kept stale text masks from the previous page and painted
+   ghost letters ("b", "s", "g") behind these words. A flat colour can't do that and reads better. */
+:root{--hl:#6cb0ff}
+h1 em,h2 em,h3 em,.statement em,.cta-band h2 em,.grad,.shimmer,
+h1 em .w>span,h2 em .w>span,.statement em .w>span,h1 em .ch,
+.split .grad .w>span,.grad .w>span,.shimmer .w>span,.hero .split .shimmer .w>span,.hero .split em.shimmer .w>span{
+  background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;
+  color:var(--hl)!important;-webkit-text-fill-color:currentColor;animation:none!important;padding-right:0}
+/* footer wordmark: flat faded colour, sized so "Navifex Pro" always fits its box */
+.f-big,.f-big .w>span,.f-big .ch,.f-big.split{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:rgba(90,162,255,.16)!important}
+.f-big{font-size:clamp(40px,12.6vw,176px);letter-spacing:-.03em;overflow:visible;max-width:100%}
+/* footer headings are now h2 (no skipped levels) but look the same as before */
+.f-top h2.f-h{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0 0 16px;line-height:1.4}
+/* tap targets + readable small text */
+.f-top ul{gap:2px}
+.f-top li a{display:inline-flex;align-items:center;min-height:40px;padding:4px 0}
+.f-bottom{font-size:14px;color:var(--muted)}
+.f-bottom a{color:var(--muted);display:inline-flex;align-items:center;min-height:40px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* industries list hover image: sits beside the cursor, never on top of the text */
+.ind-follow{margin:-110px 0 0 36px}
+/* work: concept posts open the matching sample website */
+a.post-link{display:block;color:inherit;text-decoration:none}
+.post .cap{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 12px;background:linear-gradient(transparent,rgba(6,10,20,.9));font-size:13.5px;font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.post .cap b{transition:transform .3s var(--ease)}
+a.post-link:hover img{transform:scale(1.05)}a.post-link:hover .cap b{transform:translateX(4px)}
+a.post-link:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
+/* minimum readable sizes (audit: text under 12px) */
+.tags span{font-size:12.5px}
+.pill{font-size:12px}
+.c-item small{font-size:12.5px;color:var(--muted)}
+.calendar .d{font-size:12px}.calendar .c{font-size:12px}.calendar .c em{font-size:11px}
+.phone .ig-stats{font-size:12px}
+.orbit-chip{font-size:12.5px}
+.cursor span{font-size:12px}
+.fx input[type=checkbox]{width:22px;height:22px;flex:0 0 22px}
