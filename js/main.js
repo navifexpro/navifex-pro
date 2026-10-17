@@ -236,10 +236,13 @@
   if(fol && fine && motion){
     var fimg=fol.querySelector('img'), fx=gsap.quickTo(fol,'x',{duration:.6,ease:'power3'}), fy=gsap.quickTo(fol,'y',{duration:.6,ease:'power3'}), last=0;
     document.querySelectorAll('.ind-row').forEach(function(r){
-      r.addEventListener('mouseenter',function(){ fimg.src=r.getAttribute('data-img'); gsap.to(fol,{opacity:1,scale:1,duration:.5,ease:'power3.out'}); });
+      r.addEventListener('mouseenter',function(){ fimg.src=r.getAttribute('data-img'); fol.classList.add('on'); gsap.to(fol,{opacity:1,scale:1,duration:.5,ease:'power3.out',overwrite:'auto'}); });
       r.addEventListener('mouseleave',function(){ gsap.to(fol,{opacity:0,scale:.6,duration:.4,ease:'power3.in'}); });
     });
-    var shown=true;
+    var shown=true; function hideFol(){ shown=false; gsap.to(fol,{opacity:0,scale:.6,duration:.25,ease:'power3.in',overwrite:'auto',onComplete:function(){ if(!shown) fol.classList.remove('on'); }}); }
+    var lst=document.querySelector('.ind-list'); if(lst) lst.addEventListener('mouseleave',hideFol);
+    window.addEventListener('pageshow',function(){ shown=false; fol.classList.remove('on'); gsap.set(fol,{opacity:0,scale:.6}); });
+    document.addEventListener('visibilitychange',function(){ if(document.hidden) hideFol(); });
     window.addEventListener('pointermove',function(e){
       var dx=e.clientX-last; last=e.clientX; fx(e.clientX); fy(e.clientY); gsap.to(fol,{rotation:gsap.utils.clamp(-12,12,dx*.6),duration:.6});
       /* never let the preview linger over other sections (it covered the FAQ text) */

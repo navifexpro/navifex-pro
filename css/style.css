@@ -562,3 +562,5 @@ a.post-link:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
 .orbit-chip{font-size:12.5px}
 .cursor span{font-size:12px}
 .fx input[type=checkbox]{width:22px;height:22px;flex:0 0 22px}
+/* hover preview only exists while the pointer is on the industries list (it was getting stuck over the hero) */
+.ind-follow{visibility:hidden}.ind-follow.on{visibility:visible}
