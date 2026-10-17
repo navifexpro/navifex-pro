@@ -299,6 +299,14 @@
   /* page-hero headings get the char reveal too */
   if(motion && !document.querySelector('.loader')){ /* handled in animateHero */ }
 
+  /* ---------- Services at a glance: play each card's scene only while it is on screen ---------- */
+  (function(){
+    var cards=document.querySelectorAll('.sg-card'); if(!cards.length) return;
+    if(!('IntersectionObserver' in window)){ cards.forEach(function(c){c.classList.add('play')}); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('play',e.isIntersecting); }); },{threshold:.25});
+    cards.forEach(function(c){ io.observe(c); });
+  })();
+
   /* ---------- Year ---------- */
   document.querySelectorAll('[data-year]').forEach(function(e){e.textContent=new Date().getFullYear();});
   window.addEventListener('load',function(){ if(window.ScrollTrigger) ScrollTrigger.refresh(); });
