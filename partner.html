@@ -108,6 +108,7 @@
 <script>
 function nvxCopy(inp,btn){inp.select();var done=function(){var t=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=t;},1500);};if(navigator.clipboard)navigator.clipboard.writeText(inp.value).then(done,function(){document.execCommand("copy");done();});else{document.execCommand("copy");done();}}
 (function(){
+window.addEventListener("hashchange",function(){location.reload();});
 var k=(location.hash.match(/k=([0-9a-f]{24})/)||location.search.match(/k=([0-9a-f]{24})/)||[])[1];
 if(!k){try{var s=JSON.parse(localStorage.getItem("nvx_partner")||"null");if(s&&s.dash){var m=s.dash.match(/k=([0-9a-f]{24})/);if(m)k=m[1];}}catch(e){}}
 var $=function(i){return document.getElementById(i);},rs=function(n){return "Rs "+Number(n||0).toLocaleString("en-PK");};
