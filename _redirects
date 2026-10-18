@@ -1,2 +1,10 @@
 /referral/:id /?ref=:id 302
 /chat / 200
+/industries/restaurant https://templates.navifexpro.com/restaurant/ 301
+/industries/fashion https://templates.navifexpro.com/fashion/ 301
+/industries/real-estate https://templates.navifexpro.com/realestate/ 301
+/industries/beauty https://templates.navifexpro.com/salon/ 301
+/industries/gym https://templates.navifexpro.com/gym/ 301
+/industries/clinic https://templates.navifexpro.com/clinic/ 301
+/industries/academy https://templates.navifexpro.com/school/ 301
+/industries/ecommerce https://templates.navifexpro.com/electronics/4/ 301

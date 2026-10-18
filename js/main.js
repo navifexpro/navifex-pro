@@ -162,11 +162,25 @@
       gsap.to(el,{yPercent:-(+el.dataset.speed)*20,ease:'none',scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:true}});
     });
     /* funnel bars */
-    gsap.utils.toArray('.f-bar i').forEach(function(b,i){
-      gsap.from(b,{scaleX:0,duration:1.6,ease:'power3.out',delay:i*.14,scrollTrigger:{trigger:'.funnel',start:'top 80%'}});
-    });
+    /* funnel: bars fill one after another, numbers count with them, conversion chips pop between rows,
+       then the Sales row lights up. Bars keep a soft flow of light afterwards. */
+    (function(){
+      var fn=document.querySelector('.funnel'); if(!fn) return;
+      var rows=gsap.utils.toArray('.funnel .f-row'), chips=gsap.utils.toArray('.funnel .f-conv');
+      gsap.set(fn.querySelectorAll('.f-bar i'),{scaleX:0}); gsap.set(chips,{opacity:0,scale:.6,y:-4});
+      var tl=gsap.timeline({paused:true,defaults:{ease:'power3.out'}});
+      rows.forEach(function(r,i){
+        var bar=r.querySelector('.f-bar i'), v=r.querySelector('[data-count]'), o={v:0}, end=+v.dataset.count, at=i*.85;
+        tl.to(bar,{scaleX:1,duration:1.1,onComplete:function(){r.classList.add('lit');}},at)
+          .to(o,{v:end,duration:1.1,ease:'power2.out',onUpdate:function(){v.textContent=Math.round(o.v).toLocaleString();}},at)
+          .fromTo(r,{opacity:.35},{opacity:1,duration:.4},at);
+        if(chips[i]) tl.to(chips[i],{opacity:1,scale:1,y:0,duration:.45,ease:'back.out(2)'},at+.7);
+      });
+      tl.add(function(){ fn.classList.add('won'); });
+      ScrollTrigger.create({trigger:fn,start:'top 75%',once:true,onEnter:function(){tl.play();}});
+    })();
     /* counters */
-    gsap.utils.toArray('[data-count]').forEach(function(el){
+    gsap.utils.toArray('[data-count]').forEach(function(el){ if(el.closest('.funnel')) return;
       var end=+el.dataset.count, o={v:0};
       gsap.to(o,{v:end,duration:2,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 92%'},onUpdate:function(){el.textContent=Math.round(o.v).toLocaleString()+(el.dataset.suffix||'');}});
     });
@@ -298,6 +312,14 @@
 
   /* page-hero headings get the char reveal too */
   if(motion && !document.querySelector('.loader')){ /* handled in animateHero */ }
+
+  /* ---------- Services at a glance: play each card's scene only while it is on screen ---------- */
+  (function(){
+    var cards=document.querySelectorAll('.sg-card'); if(!cards.length) return;
+    if(!('IntersectionObserver' in window)){ cards.forEach(function(c){c.classList.add('play')}); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('play',e.isIntersecting); }); },{threshold:.25});
+    cards.forEach(function(c){ io.observe(c); });
+  })();
 
   /* ---------- Year ---------- */
   document.querySelectorAll('[data-year]').forEach(function(e){e.textContent=new Date().getFullYear();});
