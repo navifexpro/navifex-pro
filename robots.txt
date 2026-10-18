@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://navifexpro.com/sitemap.xml
+Sitemap: https://navifexpro.com/samples/sitemap.xml
