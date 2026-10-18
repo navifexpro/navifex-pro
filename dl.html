@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Download All | Navifex Pro</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+:root{--bg:#060a14;--card:#0d1526;--line:#1e2b45;--txt:#e8eefc;--mut:#8fa3c7;--blue:#3d8bff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:24px;margin:0 0 4px}
+p.sub{color:var(--mut);margin:0 0 20px}
+#all{display:block;width:100%;padding:18px;border:0;border-radius:14px;background:var(--blue);color:#fff;font-size:20px;font-weight:800;cursor:pointer}
+#all:disabled{opacity:.6;cursor:default}
+#st{color:var(--mut);margin:12px 0 20px;min-height:24px}
+ol{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+li a{display:flex;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--txt);text-decoration:none;word-break:break-word}
+li a span{color:var(--blue);font-weight:700;white-space:nowrap}
+li.ok a{border-color:#2f8f5b}
+.err{color:#ff8a8a}
+</style>
+</head>
+<body>
+<main>
+<h1 id="t">Download all files</h1>
+<p class="sub">Sab files ek saath download hongi (alag alag). Browser "multiple downloads" ki ijazat maange to <b>Allow</b> dabayein.</p>
+<button id="all" type="button">⬇ Download all</button>
+<div id="st"></div>
+<ol id="list"></ol>
+</main>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  var ids=(q.get('ids')||'').split(',').map(function(s){return s.trim()}).filter(function(s){return /^[A-Za-z0-9_-]{10,100}$/.test(s)}).slice(0,60);
+  var names=(q.get('n')||'').split('|');
+  var t=q.get('t'); if(t){document.getElementById('t').textContent=t.slice(0,120);document.title=t.slice(0,60)+' | Download';}
+  var list=document.getElementById('list'),st=document.getElementById('st'),btn=document.getElementById('all');
+  if(!ids.length){st.innerHTML='<span class="err">Koi file nahi mili — link check karein.</span>';btn.disabled=true;return;}
+  var url=function(id){return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id)};
+  ids.forEach(function(id,i){
+    var li=document.createElement('li'),a=document.createElement('a');
+    a.href=url(id);a.rel='noopener';
+    var b=document.createElement('b');b.textContent=(names[i]||('File '+(i+1))).slice(0,140);
+    var s=document.createElement('span');s.textContent='⬇ Download';
+    a.appendChild(b);a.appendChild(s);li.appendChild(a);list.appendChild(li);
+  });
+  btn.addEventListener('click',function(){
+    btn.disabled=true;var i=0;
+    (function next(){
+      if(i>=ids.length){st.textContent='✅ '+ids.length+' files shuru ho gayi. Koi reh jaye to neeche se alag download karein.';btn.disabled=false;return;}
+      var f=document.createElement('iframe');f.style.display='none';f.src=url(ids[i]);document.body.appendChild(f);
+      list.children[i].className='ok';i++;st.textContent='Download ho rahi hai: '+i+' / '+ids.length;
+      setTimeout(next,1500);
+    })();
+  });
+})();
+</script>
+</body>
+</html>
