@@ -11,3 +11,6 @@
 /industries/ /samples/ 301
 /industries /samples/ 301
 /templates /samples/ 301
+# TEMP until the /samples Worker route is live (Worker route takes precedence once deployed)
+/samples https://templates.navifexpro.com/ 302
+/samples/* https://templates.navifexpro.com/ 302
