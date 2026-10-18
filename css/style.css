@@ -751,3 +751,9 @@ a.post-link:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
 .rv-card figcaption{display:flex;gap:12px;align-items:center}.rv-card figcaption img,.rv-card figcaption i{width:44px;height:44px;border-radius:50%;object-fit:cover;display:grid;place-items:center;background:#3d8bff;color:#fff;font-style:normal;font-weight:700}
 .rv-card figcaption b{display:block}.rv-card figcaption span{color:var(--muted);font-size:14px}
 #our-works[hidden],#client-reviews[hidden]{display:none!important}
+/* v9 trust strip */
+.trust-strip{padding:26px 0 6px}
+.ts-row{display:flex;flex-wrap:wrap;gap:10px 12px;justify-content:center}
+.ts-row span{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--line,rgba(127,127,127,.25));border-radius:999px;font-size:.95rem;font-weight:600;color:var(--text,inherit)}
+.ts-row span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue);flex:none}
+@media(max-width:600px){.ts-row{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.ts-row::-webkit-scrollbar{display:none}.ts-row span{flex:none;font-size:.88rem;padding:8px 13px}}
