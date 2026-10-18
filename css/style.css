@@ -1307,3 +1307,9 @@ a.svc:focus-visible{outline:2px solid var(--blue2);outline-offset:4px}
   .bento:not(.n5) .card:nth-child(4){background:radial-gradient(90% 120% at 0% 100%,rgba(47,123,255,.18),transparent 60%),rgba(255,255,255,.035);min-height:260px}
 }
 .calendar .c em{font-size:12px;padding:1px 3px}
+
+/* SEO: keyword eyebrow inside h1 (looks like the old eyebrow line) */
+.h1-kw{display:block;font-family:var(--f-body);font-size:clamp(15px,1.3vw,18px);font-weight:600;letter-spacing:0;line-height:1.4;color:var(--blue2);margin:0 auto 18px;max-width:none;text-wrap:balance}
+.h1-kw .w{overflow:visible!important;padding:0!important;margin:0!important}
+.svc-more{margin:22px 0 0;color:var(--muted);font-size:15.5px}
+.svc-more a{color:var(--blue2);text-decoration:underline;text-underline-offset:3px}
