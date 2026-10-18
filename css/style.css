@@ -730,3 +730,8 @@ a.post-link:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
 /* keep words inside the service illustrations readable */
 .sv-top b,.sv-reel b,.sv-adtop b,.sv-adtop small,.sv-adbtn,.sv-res small,.sv-bar span,.sv-page .b,.sv-sub,.sv-tag,.sv-fun .f span{font-size:12px}
 .sv-row{background:#141f3b}.sv-row.you{background:#17306a;z-index:2}.sv-res:not(.top){top:130px}.sv-res.top{padding:6px 10px}
+/* v8: partner program + templates in nav */
+.nav-links a.nav-earn{color:#06101f;background:linear-gradient(135deg,#ffd166,#ffb020);margin-left:6px;box-shadow:0 6px 18px -8px #ffb020}
+.nav-links a.nav-earn:hover,.nav-links a.nav-earn[aria-current=page]{color:#06101f;background:#ffd166}
+.mobile-menu .m-earn{color:#ffd166}
+@media (max-width:1180px){.nav-links a{padding:9px 10px;font-size:14px}}
