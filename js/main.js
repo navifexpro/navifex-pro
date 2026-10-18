@@ -4,10 +4,11 @@
   doc.classList.remove('js-off');
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce) doc.classList.add('no-motion');
-  var hasGSAP=!!window.gsap;
+  var hasGSAP=!!(window.gsap&&window.ScrollTrigger); /* both needed; if either fails to load, fall back to a static page */
   if(hasGSAP && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
   var fine=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var motion=hasGSAP && !reduce;
+  if(!motion) doc.classList.add('no-motion');
 
   /* ---------- WhatsApp links: add page name so the message shows where they came from ---------- */
   var page=document.body.getAttribute('data-page')||'Website';
