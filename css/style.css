@@ -1315,3 +1315,37 @@ a.svc:focus-visible{outline:2px solid var(--blue2);outline-offset:4px}
 .h1-kw .w{overflow:visible!important;padding:0!important;margin:0!important}
 .svc-more{margin:22px 0 0;color:var(--muted);font-size:15.5px}
 .svc-more a{color:var(--blue2);text-decoration:underline;text-underline-offset:3px}
+
+/* Home hero title: "Digital Marketing Agency." (3D word rise + underline draw + shine) */
+.hx h1.hx-title{max-width:12ch;perspective:900px;margin-bottom:34px}
+.hx h1.hx-title .w{overflow:visible}
+.hx h1.hx-title .w>span{transform-style:preserve-3d;backface-visibility:hidden}
+.hx-agency{position:relative;display:inline-block}
+.hx-agency::after{content:"";position:absolute;left:.02em;right:.1em;bottom:-.15em;height:.06em;min-height:4px;border-radius:99px;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.95) 50%,transparent 60%) no-repeat,linear-gradient(90deg,var(--blue2),var(--cyan));
+  background-size:300% 100%,100% 100%;background-position:150% 0,0 0;
+  transform:scaleX(0);transform-origin:left center;transition:transform 1s cubic-bezier(.65,0,.25,1)}
+.hx-agency.drawn::after{transform:scaleX(1);animation:hxShine 1.3s 1s ease-out, hxShine 1.3s 7s ease-out infinite}
+.hx-agency.drawn .w>span{animation:hxGlow 1.3s 1s ease-out!important}
+@keyframes hxShine{from{background-position:150% 0,0 0}to{background-position:-50% 0,0 0}}
+@keyframes hxGlow{0%,100%{text-shadow:none}45%{text-shadow:0 0 28px rgba(108,176,255,.7)}}
+@media (prefers-reduced-motion:reduce){.hx-agency::after{transition:none}.hx-agency.drawn::after,.hx-agency.drawn .w>span{animation:none!important}}
+
+/* Works page (Oct 2026 rebuild) */
+.wk-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:30px auto 0;max-width:900px}
+.wk-nav a{display:inline-flex;align-items:center;min-height:38px;padding:0 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);transition:background .25s,border-color .25s}
+.wk-nav a:hover{background:rgba(47,123,255,.18);border-color:rgba(90,162,255,.5)}
+.wk-list{display:flex;flex-direction:column;gap:clamp(64px,9vw,120px)}
+.wk-item{scroll-margin-top:110px}
+.wk-item.flip{grid-template-columns:1fr 1.3fr}
+.wk-item.flip>.browser{order:2}
+.wk-item .browser{display:block;transition:transform .5s var(--ease),box-shadow .5s}
+.wk-item .browser:hover{transform:translateY(-6px)}
+.wk-pill{display:inline-block;margin-right:10px;vertical-align:middle}
+.wk-pill.wk-live{color:#7ee2a8}
+.wk-label{vertical-align:middle}
+.wk-title{font-size:clamp(26px,3.2vw,40px);margin:14px 0 12px}
+#websites{scroll-margin-top:90px}
+@media (max-width:900px){.wk-item.flip{grid-template-columns:1fr}.wk-item.flip>.browser{order:0}}
+@media (max-width:480px){.wk-nav{gap:6px}.wk-nav a{font-size:13px;min-height:36px;padding:0 12px}}
+.wk-item .browser .bar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
