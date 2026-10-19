@@ -10,16 +10,18 @@
 @font-face{font-family:"Instrument Serif";src:url(../assets/fonts/instrument-serif-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"JetBrains Mono";src:url(../assets/fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
 
+/* metric-matched fallbacks: less text reflow while web fonts load */
+@font-face{font-family:"Manrope fb";src:local("Arial"),local("ArialMT"),local("Helvetica"),local("Liberation Sans");font-weight:100 550;size-adjust:102.1%}@font-face{font-family:"Manrope fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:551 750;size-adjust:100.1%}@font-face{font-family:"Manrope fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:751 1000;size-adjust:101.7%}@font-face{font-family:"Manrope fb";src:local("Arial"),local("ArialMT"),local("Helvetica"),local("Liberation Sans");font-weight:100 550;unicode-range:U+0030-0039;size-adjust:109.7%}@font-face{font-family:"Manrope fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:551 750;unicode-range:U+0030-0039;size-adjust:118.3%}@font-face{font-family:"Manrope fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:751 1000;unicode-range:U+0030-0039;size-adjust:121.2%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial"),local("ArialMT"),local("Helvetica"),local("Liberation Sans");font-weight:100 550;size-adjust:105.2%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:551 750;size-adjust:101.9%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:751 1000;size-adjust:103.2%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial"),local("ArialMT"),local("Helvetica"),local("Liberation Sans");font-weight:100 550;unicode-range:U+0030-0039;size-adjust:117.5%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:551 750;unicode-range:U+0030-0039;size-adjust:119.7%}@font-face{font-family:"Bricolage Grotesque fb";src:local("Arial Bold"),local("Arial-BoldMT"),local("Helvetica Bold"),local("Liberation Sans Bold");font-weight:751 1000;unicode-range:U+0030-0039;size-adjust:120.5%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman"),local("TimesNewRomanPSMT"),local("Times"),local("Liberation Serif");font-weight:100 550;size-adjust:82.6%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),local("Times Bold"),local("Liberation Serif Bold");font-weight:551 750;size-adjust:77.8%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),local("Times Bold"),local("Liberation Serif Bold");font-weight:751 1000;size-adjust:77.8%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman"),local("TimesNewRomanPSMT"),local("Times"),local("Liberation Serif");font-weight:100 550;unicode-range:U+0030-0039;size-adjust:92%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),local("Times Bold"),local("Liberation Serif Bold");font-weight:551 750;unicode-range:U+0030-0039;size-adjust:92%}@font-face{font-family:"Instrument Serif fb";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),local("Times Bold"),local("Liberation Serif Bold");font-weight:751 1000;unicode-range:U+0030-0039;size-adjust:92%}
 :root{
   --bg:#060a14; --bg2:#0a1122; --surface:#0d162b; --surface2:#111d38;
   --line:rgba(120,160,255,.13); --line2:rgba(120,160,255,.24);
   --text:#e9f0ff; --muted:#93a3c4; --dim:#61708f;
   --blue:#2f7bff; --blue2:#5aa2ff; --cyan:#7fd0ff; --glow:rgba(47,123,255,.45);
   --radius:20px; --radius-sm:12px;
-  --f-head:"Bricolage Grotesque",system-ui,sans-serif;
-  --f-body:"Manrope",system-ui,sans-serif;
+  --f-head:"Bricolage Grotesque","Bricolage Grotesque fb",system-ui,sans-serif;
+  --f-body:"Manrope","Manrope fb",system-ui,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,monospace;
-  --f-serif:"Instrument Serif",Georgia,serif;
+  --f-serif:"Instrument Serif","Instrument Serif fb",Georgia,serif;
   --pad:clamp(16px,4vw,48px); --max:1240px;
   --ease:cubic-bezier(.2,.8,.2,1);
 }
@@ -769,8 +771,8 @@ a.post-link:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
   --blue:#2f7bff; --blue2:#5aa2ff; --hl:#5aa2ff;
   --line:rgba(150,175,255,.10); --line2:rgba(150,175,255,.20);
   --radius:26px; --radius-sm:16px;
-  --f-display:"Bricolage Grotesque",system-ui,sans-serif;
-  --f-head:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-display:"Bricolage Grotesque","Bricolage Grotesque fb",system-ui,sans-serif;
+  --f-head:"Manrope","Manrope fb",system-ui,-apple-system,"Segoe UI",sans-serif;
   --ease:cubic-bezier(.2,.8,.2,1); --spring:cubic-bezier(.34,1.4,.64,1);
   --max:1200px;
 }
