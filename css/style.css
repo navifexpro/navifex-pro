@@ -1533,3 +1533,23 @@ a.gx-sl:hover,a.gx-sl:focus-visible{background:rgba(47,123,255,.35);border-color
 .hs3 .cta-band{text-align:center;display:flex;flex-direction:column;align-items:center}
 .hs3 .cta-band .btn-row{justify-content:center}
 .hfaq{padding-top:clamp(40px,5vw,70px)}
+
+/* ================= v17: per-page 3D hero stage (js/scene3d.js) ================= */
+.p3d{position:relative;width:100%;height:clamp(300px,54vh,580px);margin:clamp(8px,2vw,24px) auto 0;pointer-events:none;isolation:isolate}
+.p3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .9s var(--ease)}
+.p3d.gl-on canvas{opacity:1}
+/* fallback (no WebGL / JS off): brand mark under a soft spotlight */
+.p3d::before{content:"";position:absolute;left:50%;top:50%;width:min(300px,56vw);aspect-ratio:1;transform:translate(-50%,-50%);z-index:-1;
+  background:url(/assets/img/mark.png) center/58% no-repeat,radial-gradient(closest-side,rgba(47,123,255,.32),transparent);transition:opacity .6s}
+.p3d.gl-on::before{opacity:0}
+.p3d:not(.gl-on):not(.gl-no)::before{opacity:.0}
+.js-off .p3d::before,.p3d.gl-no::before{opacity:.9}
+.has-p3d.page-hero,.has-p3d.svc-hero{padding-bottom:clamp(16px,3vw,40px)}
+.has-p3d.page-hero::after,.has-p3d.svc-hero::after{opacity:calc(.35 - var(--hz)*.3)}
+.nf.has-p3d{min-height:auto;padding:130px 0 40px}
+.nf .p3d{height:clamp(240px,36vh,360px)}
+.p3d.sm{height:clamp(220px,34vh,360px)}
+@media (max-width:899px){.p3d{height:clamp(280px,46vh,420px)}.p3d.sm{height:clamp(200px,30vh,300px)}}
+.has-p3d.page-hero,.has-p3d.svc-hero{padding-top:clamp(120px,13vw,170px)}
+.has-p3d .lead{margin-bottom:0}
+.svc-hero.has-p3d .lead{margin-bottom:28px}

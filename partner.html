@@ -34,7 +34,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/style.css?v=15">
+<link rel="stylesheet" href="/css/style.css?v=17">
 </head>
 <body data-page="Partner">
 <a class="skip" href="#main">Skip to content</a>
@@ -59,10 +59,10 @@
 </header>
 <div class="mobile-menu" role="dialog" aria-label="Menu"><a class="m-link" href="/">Home</a><a class="m-link" href="/services">Services</a><a class="m-link" href="/work">Work</a><a class="m-link" href="/samples/">Our Samples</a><a class="m-link" href="/about">About</a><a class="m-link" href="/contact">Contact</a><a class="m-link m-earn" href="/earn">Earn With Us</a><a class="btn btn-primary magnetic" data-wa href="https://wa.me/923130111349"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.3 23.7l6.1-1.6A11.8 11.8 0 0 0 24 12a11.7 11.7 0 0 0-3.5-8.5zM12 21.6a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.6 1 1-3.5-.3-.4A9.8 9.8 0 1 1 12 21.6zm5.4-7.3c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.3 3.3 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.3 13.3 0 0 0 5.1 4.5c1.9.8 2.6.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3z"/></svg><span>Get a Free Consultation</span></a></div>
 <main id="main">
-<section class="page-hero" data-hero><div class="ph-glow" aria-hidden="true"></div><div class="wrap">
+<section class="page-hero has-p3d" data-hero><div class="ph-glow" aria-hidden="true"></div><div class="wrap">
   <h1>Your <em>earnings.</em></h1>
   <p class="lead hero-in">Your code, your link, your clients and your commission, all in one place.</p>
-</div></section>
+</div><div class="p3d" data-scene="coin" aria-hidden="true"><canvas></canvas></div></section>
 <style>
 .fx-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,4vw,40px);margin-bottom:22px}
 .fx-card h2{font-family:var(--f-head);font-size:clamp(22px,3vw,30px);margin:0 0 6px}
@@ -162,7 +162,8 @@ $("pLoad").style.display="none";$("pBody").style.display="";if(window.ScrollTrig
 <script src="/js/vendor/gsap.min.js"></script>
 <script src="/js/vendor/ScrollTrigger.min.js"></script>
 <script src="/js/vendor/lenis.min.js"></script>
-<script src="/js/main.js?v=12"></script>
+<script src="/js/main.js?v=14"></script>
+<script type="module" src="/js/scene3d.js?v=1"></script>
 <script src="/js/kit.js?v=2"></script>
 <script src="https://bot.navifexpro.com/widget.js?v=4" data-brand="navifex" data-bottom="92" defer></script>
 <script src="/js/ref.js?v=2" defer></script>
