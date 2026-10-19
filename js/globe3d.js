@@ -1,6 +1,7 @@
 /* Navifex Pro — cinematic WebGL globe (Three.js). Driven 1:1 by scroll state in window.NFX_GX (set by main.js).
-   Chapters: 01 reveal · 02 rotate + Lahore + arcs · 03 split into 9 service segments · 04 macro dive to Lahore ·
-   05 dots stream into a funnel · 06 globe reforms in full light. Falls back to the CSS globe if WebGL is missing. */
+   Hero: globe rises under a spotlight. Chapters: 01 turn to Lahore + arcs to the world · 02 split into one longitude
+   slice per service (count comes from window.NFX_SERVICES) · 03 dots stream into a Views→Clicks→Leads→Sales funnel.
+   Falls back to the CSS globe if WebGL is missing. */
 import * as THREE from './vendor/three.module.min.js';
 
 const root = document.querySelector('[data-gx]');
@@ -32,10 +33,11 @@ function init() {
   const globe = new THREE.Group();
   scene.add(globe);
 
-  /* ---------- segments: 9 longitude slices = 9 services ---------- */
-  const SEG = 9, segDirs = [];
-  for (let k = 0; k < SEG; k++) { const a = (-180 + 20 + k * 40) * D2R; segDirs.push(new THREE.Vector3(Math.sin(a), 0, Math.cos(a))); }
-  const segOf = (lon) => Math.min(SEG - 1, Math.floor((lon + 180) / 40));
+  /* ---------- segments: one longitude slice per service ---------- */
+  const SVC = (window.NFX_SERVICES || []).length ? window.NFX_SERVICES : [{ name: 'Services', url: '/services' }];
+  const SEG = SVC.length, SW = 360 / SEG, segDirs = [];
+  for (let k = 0; k < SEG; k++) { const a = (-180 + SW / 2 + k * SW) * D2R; segDirs.push(new THREE.Vector3(Math.sin(a), 0, Math.cos(a))); }
+  const segOf = (lon) => Math.min(SEG - 1, Math.max(0, Math.floor((lon + 180) / SW)));
 
   /* ---------- dots: land (Natural Earth) + faint ocean lattice ---------- */
   const nLand = LAND.length / 2, nSea = mobile ? 1400 : 3600, N = nLand + nSea;
@@ -68,7 +70,7 @@ function init() {
     uniforms: U, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
     vertexShader: /* glsl */`
       attribute float aKind; attribute float aSeg; attribute float aRand; attribute vec3 aTarget;
-      uniform float uTime,uIntro,uLahore,uSplit,uStream,uLight,uDim,uPR,uSize; uniform vec3 uHome; uniform vec3 uSegDir[9]; uniform vec3 uLightDir; uniform vec3 uCam;
+      uniform float uTime,uIntro,uLahore,uSplit,uStream,uLight,uDim,uPR,uSize; uniform vec3 uHome; uniform vec3 uSegDir[${SEG}]; uniform vec3 uLightDir; uniform vec3 uCam;
       varying float vA; varying vec3 vC;
       void main(){
         int s=int(aSeg+0.5);
@@ -265,6 +267,8 @@ function init() {
 
   /* ---------- DOM hooks written from projection ---------- */
   const fx = root.querySelector('.gx-fx');
+  const labWrap = root.querySelector('.gx-labels');
+  if (labWrap && !labWrap.children.length) labWrap.innerHTML = SVC.map((v, k) => `<a class="gx-sl" href="${v.url}" data-cursor="Open"><small>${String(k + 1).padStart(2, '0')}</small>${v.name}</a>`).join('');
   const labels = [...root.querySelectorAll('.gx-sl')], svg = root.querySelector('.gx-lines');
   const pin = root.querySelector('.gx-pin');
   const fl = [...root.querySelectorAll('.gx-fl')];
@@ -291,7 +295,7 @@ function init() {
     const ie = 1 - Math.pow(1 - intro, 3);
 
     const rise = S.rise || 0, turn = S.turn || 0, drift = S.drift || 0, tilt = S.tilt || 0, split = S.split || 0;
-    const dive = S.dive || 0, stream = S.stream || 0, light = S.light || 0, phone = S.phone || 0;
+    const dive = 0, stream = S.stream || 0, light = S.light || 0, phone = 0;
 
     // globe placement
     const re = rise * rise * (3 - 2 * rise);
@@ -345,7 +349,7 @@ function init() {
           let dx = A[0] - C[0], dy = A[1] - C[1]; const m = Math.hypot(dx, dy) || 1; dx /= m; dy /= m;
           const len = mobile ? 22 : 40; let bx = A[0] + dx * len, by = A[1] + dy * len;
           const minX = mobile ? 70 : Math.max(W * 0.5, C[0] - (C[0] - W * 0.5) * 2) + 20;
-          bx = Math.max(dx < -0.2 ? minX + 110 : minX, Math.min(W - (dx > 0.2 ? 150 : 70), bx)); by = Math.max(mobile ? 120 : 90, Math.min(H - (mobile ? 300 : 110), by));
+          bx = Math.max(dx < -0.2 ? minX + 110 : minX, Math.min(W - (dx > 0.2 ? 150 : 70), bx)); by = Math.max(mobile ? 140 : 90, Math.min(H - (mobile ? 300 : 110), by));
           el.style.transform = `translate3d(${bx.toFixed(1)}px,${by.toFixed(1)}px,0) translate(${dx < -0.2 ? '-100%' : dx > 0.2 ? '0%' : '-50%'},${dy < -0.3 ? '-100%' : dy > 0.3 ? '0%' : '-50%'})`;
           const ln = lines[k]; if (ln) { ln.setAttribute('x1', A[0].toFixed(1)); ln.setAttribute('y1', A[1].toFixed(1)); ln.setAttribute('x2', bx.toFixed(1)); ln.setAttribute('y2', by.toFixed(1)); }
         });

@@ -1,4 +1,4 @@
-/* Navifex Pro — interactions (v12: cinematic globe story, shape-mask transitions) */
+/* Navifex Pro — interactions (v13: simple 3-chapter home story, premium cards, per-page 3D) */
 (function(){
   var doc=document.documentElement;
   doc.classList.remove('js-off');
@@ -277,6 +277,21 @@
     var fb=document.querySelector('.f-big');
     if(fb){ splitChars(fb); var fch=fb.querySelectorAll('.ch'); fch.forEach(function(c,i){c.style.setProperty('--i',i);});
       gsap.fromTo(fch,{yPercent:110,opacity:0,rotationX:-70},{yPercent:0,opacity:1,rotationX:0,stagger:.05,duration:1.2,ease:'power4.out',scrollTrigger:{trigger:fb,start:'top 96%',onEnter:function(){ setTimeout(function(){fb.classList.add('sweep');},700); }}}); }
+    /* premium service cards: masked, staggered rise */
+    if(document.querySelector('.sg-grid:not(.bento) .sg-card,.sg-grid.pc .sg-card')){
+      gsap.set('.sg-grid:not(.bento) .sg-card',{clipPath:'inset(100% 0% 0% 0% round 28px)',y:60});
+      ScrollTrigger.batch('.sg-grid:not(.bento) .sg-card',{start:'top 92%',once:true,onEnter:function(els){
+        gsap.to(els,{clipPath:'inset(0% 0% 0% 0% round 28px)',y:0,duration:1.1,ease:'power4.out',stagger:.09,onComplete:function(){ els.forEach(function(e){ e.style.clipPath=''; }); }});
+      }});
+    }
+    /* work rail: glides sideways as the section passes (desktop); native swipe on touch */
+    var wr=document.querySelector('.wr-rail');
+    if(wr) ScrollTrigger.matchMedia({'(min-width: 900px) and (hover:hover)':function(){
+      var tr=wr.querySelector('.wr-track'); wr.classList.add('glide');
+      var d=function(){ return Math.max(0,tr.scrollWidth-wr.clientWidth); };
+      var tw=gsap.fromTo(tr,{x:0},{x:function(){return -d();},ease:'none',scrollTrigger:{trigger:'.wr',start:'top 75%',end:'bottom 25%',scrub:.6,invalidateOnRefresh:true}});
+      return function(){ wr.classList.remove('glide'); tw.scrollTrigger&&tw.scrollTrigger.kill(); tw.kill(); gsap.set(tr,{clearProps:'transform'}); };
+    }});
     /* showcase: browser frame grows into view */
     var scf=document.querySelector('.sc-frame');
     if(scf){ gsap.fromTo(scf,{scale:.8,rotationX:16,y:40},{scale:1,rotationX:0,y:0,ease:'none',scrollTrigger:{trigger:'.sc-stage',start:'top 95%',end:'top 25%',scrub:1}});
@@ -393,49 +408,48 @@
   function initGX(){
     var gx=document.querySelector('[data-gx]'); if(!gx) return;
     var S=window.NFX_GX||(window.NFX_GX={});
-    'rise turn lahore arcT arcOp split labels tilt spin dive phone stream light pin drift fun count likes heart dm order'.split(' ').forEach(function(k){ if(S[k]==null) S[k]=0; });
-    if(!motion) return;
-    var track=gx.querySelector('.gx-track'), fx=gx.querySelector('.gx-fx'), hud=gx.querySelector('.gx-hud'), huds=hud?[].slice.call(hud.children):[];
+    'rise turn lahore arcT arcOp split labels tilt spin stream light pin drift fun count'.split(' ').forEach(function(k){ if(S[k]==null) S[k]=0; });
+    var fx=gx.querySelector('.gx-fx'), lab=fx&&fx.querySelector('.gx-labels');
+    /* service labels come from the ONE services list (js/services.js) */
+    if(lab&&!lab.children.length&&window.NFX_SERVICES){
+      lab.innerHTML=window.NFX_SERVICES.map(function(v,k){ return '<a class="gx-sl" href="'+v.url+'" data-cursor="Open"><small>'+('0'+(k+1)).slice(-2)+'</small>'+v.name+'</a>'; }).join('');
+    }
+    if(!motion){ S.rise=0; return; }
+    var track=gx.querySelector('.gx-track'), hud=gx.querySelector('.gx-hud'), huds=hud?[].slice.call(hud.children):[];
     var chs=[].slice.call(gx.querySelectorAll('.gx-ch')), stage=gx.querySelector('.gx-stage'), hx=gx.querySelector('.hx');
-    var pin=fx.querySelector('.gx-pin'), phone=fx.querySelector('.gx-phone'), likes=fx.querySelector('.gp-likes'), heart=fx.querySelector('.gp-heart'),
-        dm=fx.querySelector('.gp-dm'), order=fx.querySelector('.gp-order'), fun=fx.querySelector('.gx-funnel'), nums=[].slice.call(fx.querySelectorAll('.gx-fl b'));
+    var pin=fx.querySelector('.gx-pin'), fun=fx.querySelector('.gx-funnel'), nums=[].slice.call(fx.querySelectorAll('.gx-fl b'));
     chs.forEach(function(c){ var n=c.querySelector('.gx-num'); if(n&&n.lastChild&&n.lastChild.nodeType===3){ var sp=document.createElement('span'); sp.className='gx-sc'; sp.textContent=n.lastChild.textContent.trim(); n.replaceChild(sp,n.lastChild); n.insertBefore(document.createTextNode(' '),sp);} });
     var kick=function(){ if(window.NFX_GX_KICK) window.NFX_GX_KICK(); };
     window.addEventListener('scroll',function(){ S.scroll=window.scrollY; },{passive:true});
     var cur=-1;
-    function chapter(i){ if(i===cur) return; cur=i; huds.forEach(function(h,k){h.classList.toggle('on',k===i);}); var c=chs[i-1]; if(c) scramble(c.querySelector('.gx-sc'),.6); }
+    function chapter(i){ if(i===cur) return; cur=i; huds.forEach(function(h,k){h.classList.toggle('on',k===i-1);}); var c=chs[i-1]; if(c) scramble(c.querySelector('.gx-sc'),.6); }
     function paint(){
       fx.style.setProperty('--lo',S.labels.toFixed(3));
+      fx.classList.toggle('lab-on',S.labels>.6);
       pin.style.opacity=S.pin;
-      var p=S.phone; phone.style.opacity=p; phone.style.visibility=p>0.001?'visible':'hidden';
-      phone.style.transform='translate(-50%,-50%) translateY('+((1-p)*60).toFixed(1)+'px) scale('+(.86+.14*p).toFixed(3)+')';
-      likes.textContent=Math.round(S.likes*1284).toLocaleString();
-      heart.style.opacity=S.heart; heart.style.transform='translate(-50%,-50%) scale('+(S.heart*1.1).toFixed(3)+')';
-      dm.style.opacity=S.dm; dm.style.transform='translateY('+((1-S.dm)*-24).toFixed(1)+'px)';
-      order.style.opacity=S.order; order.style.transform='translateY('+((1-S.order)*24).toFixed(1)+'px) scale('+(.9+.1*S.order).toFixed(3)+')';
       fun.style.opacity=S.fun; nums.forEach(function(b){ b.textContent=Math.round(+b.dataset.to*S.count).toLocaleString(); });
       kick();
     }
     gsap.to(S,{rise:1,ease:'none',scrollTrigger:{trigger:hx,start:'top top',end:'bottom top',scrub:.8,onUpdate:function(st){ if(st.progress<.6) chapter(0); gsap.set(hud,{opacity:Math.max(0,st.progress*2-1)}); }},onUpdate:paint});
     var tl=gsap.timeline({defaults:{ease:'none'},onUpdate:paint,scrollTrigger:{trigger:track,start:'top top',end:'bottom bottom',scrub:.9,
-      onUpdate:function(st){ var q=st.progress*100, i=q<20?1:q<41?2:q<61?3:q<82.5?4:5; chapter(i); }}});
+      onUpdate:function(st){ var q=st.progress*100; chapter(q<33?1:q<66?2:3); }}});
     function T(k,a,b,at,d,ease){ var f={},t={duration:d,ease:ease||'none',immediateRender:false}; f[k]=a; t[k]=b; tl.fromTo(S,f,t,at); }
-    T('turn',0,1,0,8,'power1.inOut'); T('lahore',0,1,5,4); T('pin',0,1,7,3);
-    T('arcOp',0,1,8,2); T('arcT',0,1.5,8,11); T('drift',0,1,8,13,'power1.inOut'); T('pin',1,0,18,2); T('arcOp',1,0,19,3);
-    T('lahore',1,0,20,3); T('tilt',0,1,21,6,'power2.inOut'); T('spin',0,6.2832,21,20,'power1.inOut'); T('split',0,1,24,6,'power2.inOut'); T('labels',0,1,28,3);
-    T('labels',1,0,35,2); T('split',1,0,35,5,'power2.inOut'); T('tilt',1,0,36,5,'power2.inOut'); T('drift',1,0,36,5,'power1.inOut');
-    T('lahore',0,1,41,2); T('dive',0,1,42,8,'power2.in'); T('phone',0,1,47,3,'power2.out'); T('likes',0,1,50,3,'power1.out'); T('heart',0,1,50.2,.8); T('heart',1,0,51.4,1.2);
-    T('dm',0,1,53,1.5,'power2.out'); T('order',0,1,56,1.5,'back.out(1.6)'); T('phone',1,0,59,2,'power2.in'); T('dive',1,0,59.5,4,'power2.out'); T('lahore',1,0,60,2); T('dm',1,0,61,.2); T('order',1,0,61,.2); T('likes',1,0,61,.2);
-    T('stream',0,1,62,10); T('fun',0,1,69,3); T('count',0,1,70,8,'power1.out'); T('fun',1,0,81,2);
-    T('stream',1,0,82,8,'power1.inOut'); T('light',0,1,85,7,'power1.out'); T('count',1,0,90,.1);
+    /* 01 Reach: turn to Lahore, beacon, arcs out to the world */
+    T('turn',0,1,0,12,'power1.inOut'); T('lahore',0,1,4,5); T('pin',0,1,6,3);
+    T('arcOp',0,1,7,2); T('arcT',0,1.5,7,20); T('drift',0,1,7,24,'power1.inOut'); T('pin',1,0,27,2); T('arcOp',1,0,28,3); T('lahore',1,0,29,3);
+    /* 02 Services: globe tilts and opens into one layer per service */
+    T('tilt',0,1,32,7,'power2.inOut'); T('spin',0,6.2832,32,30,'power1.inOut'); T('split',0,1,35,8,'power2.inOut'); T('labels',0,1,42,3);
+    T('labels',1,0,58,2); T('split',1,0,58,6,'power2.inOut'); T('tilt',1,0,59,6,'power2.inOut'); T('drift',1,0,59,6,'power1.inOut');
+    /* 03 Results: dots stream into the funnel, numbers count up */
+    T('stream',0,1,66,14); T('fun',0,1,76,4); T('count',0,1,77,12,'power1.out'); T('light',0,1,88,10,'power1.out');
     tl.set({},{},100);
-    var win=[[1,19.5],[21,40.5],[42,60.5],[62,81.5],[84,101]];
+    var win=[[0,31],[33,64],[67,101]];
     chs.forEach(function(c,i){
       var a=win[i][0], b=win[i][1], kids=c.children, last=i===chs.length-1;
       gsap.set(c,{autoAlpha:0}); gsap.set(kids,{opacity:0});
       tl.fromTo(c,{autoAlpha:0},{autoAlpha:1,duration:.5,immediateRender:false},a)
-        .fromTo(kids,{y:46,opacity:0,filter:'blur(10px)'},{y:0,opacity:1,filter:'blur(0px)',duration:3,stagger:.7,ease:'power2.out',immediateRender:false},a);
-      if(!last) tl.fromTo(kids,{y:0,opacity:1,filter:'blur(0px)'},{y:-46,opacity:0,filter:'blur(8px)',duration:2.4,stagger:.25,ease:'power2.in',immediateRender:false},b-3)
+        .fromTo(kids,{y:46,opacity:0,filter:'blur(10px)'},{y:0,opacity:1,filter:'blur(0px)',duration:4,stagger:.9,ease:'power2.out',immediateRender:false},a);
+      if(!last) tl.fromTo(kids,{y:0,opacity:1,filter:'blur(0px)'},{y:-46,opacity:0,filter:'blur(8px)',duration:3,stagger:.3,ease:'power2.in',immediateRender:false},b-3.5)
         .fromTo(c,{autoAlpha:1},{autoAlpha:0,duration:.3,immediateRender:false},b-.3);
     });
     /* exit: the stage folds into a rounded card as the story scrolls away */
