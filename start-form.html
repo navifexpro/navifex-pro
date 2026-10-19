@@ -10,6 +10,7 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-SHX31VDL26');
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';if(h.indexOf('wa.me/')>-1||h.indexOf('api.whatsapp.com')>-1)gtag('event','whatsapp_click',{link_url:h.split('?')[0],page:location.pathname});else if(h.indexOf('tel:')===0)gtag('event','call_click',{page:location.pathname});},true);
 </script>
 <title>Start Your Project (Form) | Navifex Pro</title>
 <meta name="robots" content="noindex">
