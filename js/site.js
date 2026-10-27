@@ -29,6 +29,14 @@
     setTimeout(skip, 2600);
   }
 
+  /* ---- phones: keep floating chat/WhatsApp buttons off the hero text ---- */
+  var heroEl = d.querySelector('.hero');
+  if (heroEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { root.classList.toggle('hero-vis', e.isIntersecting); });
+    }, { threshold: 0.35 }).observe(heroEl);
+  }
+
   /* ---- scroll reveal (once, staggered) ---- */
   var rv = d.querySelectorAll('.rv');
   if (rv.length && 'IntersectionObserver' in window && !reduce) {

@@ -349,6 +349,10 @@ a.c-item:hover{transform:translateY(-2px)}
 .wa-float:hover{transform:scale(1.06)}
 .wa-float svg{width:28px;height:28px}
 
+/* floating buttons: hidden during the intro, and on phones while the hero is on screen */
+.intro:not(.intro-skip) #sbc-btn,.intro:not(.intro-skip) .wa-float{opacity:0!important;pointer-events:none}
+@media (max-width:759px){.hero-vis #sbc-btn,.hero-vis .wa-float{opacity:0!important;pointer-events:none;transform:translateY(12px)}}
+#sbc-btn,.wa-float{transition:opacity .25s var(--ease),transform .25s var(--ease)}
 /* cookie notice */
 .ck{position:fixed;left:16px;right:16px;bottom:16px;margin:0 auto;z-index:150;max-width:640px;display:flex;align-items:center;gap:20px;padding:20px;border-radius:var(--r);background:#fff;color:var(--ink);box-shadow:0 24px 60px -20px rgba(0,0,0,.55);font-size:15px;line-height:1.5;opacity:0;transform:translateY(16px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .ck.show{opacity:1;transform:none}
