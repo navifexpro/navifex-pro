@@ -87,12 +87,13 @@
     b.innerHTML = '<p>We use analytics cookies to see which pages help people, only if you agree. <a href="/privacy#cookies">Privacy policy</a></p>' +
       '<div class="btn-row"><button type="button" class="btn btn-primary" data-ck="granted">Accept</button><button type="button" class="btn btn-ghost" data-ck="denied">Decline</button></div>';
     d.body.appendChild(b);
+    root.style.setProperty('--ck-h', (b.offsetHeight + 16) + 'px'); root.classList.add('has-ck');
     requestAnimationFrame(function () { requestAnimationFrame(function () { b.classList.add('show'); }); });
     b.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-ck]'); if (!btn) return;
       var v = btn.getAttribute('data-ck'); store(KEY, v);
       if (v === 'granted') loadGA();
-      b.remove();
+      b.remove(); root.classList.remove('has-ck');
     });
   }
   var choice = store(KEY);
