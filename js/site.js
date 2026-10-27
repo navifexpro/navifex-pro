@@ -84,17 +84,20 @@
     w.addEventListener('beforeprint', function () { items.forEach(reveal); heroGo(); });
   } else { items.forEach(reveal); }
 
-  /* ---- home intro: linen screen, wordmark rises, panel lifts. Tap / click / Esc skips. ---- */
+  /* ---- home intro reveal: mark draws in, wordmark rises, screen splits open. Tap / click / Esc skips. ---- */
   if (introOn) {
-    var ov = d.querySelector('.intro-ov');
-    var finished = false;
+    var ov = d.querySelector('.intro-ov'), finished = false, skipped = false;
     var finish = function () { if (finished) return; finished = true; root.classList.add('intro-done'); heroGo(); };
-    var skip = function () { root.classList.add('intro-skip'); d.removeEventListener('keydown', onKey); setTimeout(finish, 120); };
-    var onKey = function (e) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') skip(); };
-    if (ov) { ov.addEventListener('click', skip); ov.addEventListener('animationend', function (e) { if (e.target === ov) finish(); }); }
+    var cleanup = function () { d.removeEventListener('keydown', onKey); if (ov) ov.remove(); root.classList.remove('intro'); };
+    var skip = function () {
+      if (skipped || finished) return; skipped = true;
+      root.classList.add('intro-skip'); setTimeout(finish, 160); setTimeout(cleanup, 700);
+    };
+    var onKey = function (e) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { if (e.key !== 'Escape') e.preventDefault(); skip(); } };
+    if (ov) { ov.addEventListener('click', skip); ov.addEventListener('touchstart', skip, { passive: true }); }
     d.addEventListener('keydown', onKey);
-    setTimeout(finish, 1450);
-    setTimeout(function () { if (ov) ov.remove(); }, 2600);
+    setTimeout(finish, 1720);
+    setTimeout(function () { if (!skipped) cleanup(); }, 2450);
   } else if (anim) {
     requestAnimationFrame(function () { requestAnimationFrame(heroGo); });
   } else heroGo();
@@ -115,7 +118,7 @@
   }
 
   /* ---- phones: keep floating chat/WhatsApp buttons off the hero ---- */
-  var homeHero = d.querySelector('.home-hero');
+  var homeHero = d.querySelector('.hero');
   if (homeHero && hasIO) {
     new IntersectionObserver(function (es) { es.forEach(function (e) { root.classList.toggle('hero-vis', e.isIntersecting); }); }, { threshold: 0.35 }).observe(homeHero);
   }
