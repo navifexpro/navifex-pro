@@ -150,6 +150,9 @@ h1 em,h2 em,.h-sub em{font-style:italic;color:var(--blue-ink)}
 .ph::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);pointer-events:none}
 .ph img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform 1.4s var(--ease)}
 .ph-px{position:absolute;left:0;right:0;top:-6%;bottom:-6%;display:block;will-change:transform}
+.ph.ill{background:radial-gradient(120% 90% at 50% 42%,#182c56 0%,#0f1a31 58%,#0b1426 100%)}
+.ph.ill img{object-fit:contain;padding:clamp(4px,3.5%,26px)}
+.svc-card .ph.ill img{padding:2%}
 .ph figcaption{position:absolute;left:16px;bottom:16px;z-index:2;background:rgba(6,10,20,.82);border:1px solid var(--bd);color:var(--ink);font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px}
 
 /* ---------- trust strip ---------- */
