@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Blog Admin | Navifex Pro</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#0b1220;--ink2:#5b6475;--line:#e3e7ef;--brand:#2f5bff;--red:#dc2626;--green:#16a34a}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea{font:inherit;color:inherit;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff}
+textarea{resize:vertical}
+textarea.body{min-height:340px;font-family:ui-monospace,Consolas,monospace;font-size:14px;line-height:1.6}
+label{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin:14px 0 6px}
+small.help{display:block;color:var(--ink2);font-size:12px;margin-top:5px}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+.top{position:sticky;top:0;z-index:5;background:rgba(244,246,251,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800}
+.brand img{width:30px;height:30px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14px;border:1px solid var(--line);background:#fff}
+.btn.blue{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.red{color:var(--red)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.center{min-height:80vh;display:grid;place-items:center}
+.login{width:100%;max-width:380px}
+.login h1{font-size:24px;margin-bottom:4px}
+.muted{color:var(--ink2);font-size:14px}
+.msg{margin-top:12px;font-size:14px;padding:10px 12px;border-radius:10px;display:none}
+.msg.err{display:block;background:#fef2f2;color:var(--red)}
+.msg.ok{display:block;background:#ecfdf3;color:var(--green)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 16px;flex-wrap:wrap}
+.head b{font-size:20px}
+.list{display:grid;gap:12px;padding-bottom:60px}
+.item{display:flex;gap:16px;align-items:flex-start}
+.item img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--line);flex:none;background:#eef1f7}
+.item .b{flex:1;min-width:0}
+.item b{display:block;font-size:16px}
+.item p{font-size:14px;color:var(--ink2);margin-top:4px}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--ink2)}
+.tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.tag.on{background:#ecfdf3;color:var(--green)}
+.tag.off{background:#f1f3f7;color:var(--ink2)}
+.tag.later{background:#eef2ff;color:var(--brand)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.empty{text-align:center;padding:40px 10px;color:var(--ink2)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{display:flex;gap:8px;align-items:center;margin-top:16px;font-size:14px;color:var(--ink)}
+.check input{width:auto}
+dialog{margin:auto;border:0;border-radius:20px;padding:0;width:min(820px,96vw);max-height:94vh}
+dialog::backdrop{background:rgba(11,18,32,.45)}
+dialog form{padding:24px}
+dialog h2{font-size:21px}
+.prev img{max-width:220px;border-radius:10px;margin-top:8px;border:1px solid var(--line)}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:22px;position:sticky;bottom:-24px;background:#fff;padding:12px 0}
+.count{font-size:12px;color:var(--ink2);float:right;font-weight:600}
+@media(max-width:620px){.row{grid-template-columns:1fr}.item{flex-direction:column}.item img{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <div class="brand"><img src="/assets/img/mark-64.webp" alt="">Blog Admin</div>
+  <div style="display:flex;gap:8px">
+    <a class="btn sm" href="/blog" target="_blank" rel="noopener">View blog</a>
+    <button class="btn sm" id="logoutBtn" hidden>Log out</button>
+  </div>
+</div></div>
+
+<div class="wrap center" id="loginView" hidden>
+  <form class="card login" id="loginForm">
+    <h1>Log in</h1>
+    <p class="muted">Write and manage articles for navifexpro.com/blog.</p>
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <button class="btn blue" style="width:100%;justify-content:center;margin-top:16px">Log in</button>
+    <div class="msg" id="loginMsg"></div>
+  </form>
+</div>
+
+<div class="wrap center" id="setupView" hidden>
+  <div class="card login"><h1>Setup not finished</h1><p class="muted" id="setupText"></p></div>
+</div>
+
+<div class="wrap" id="panel" hidden>
+  <div class="head">
+    <div><b>Articles</b><div class="muted" id="hint"></div></div>
+    <button class="btn blue" id="addBtn">+ New article</button>
+  </div>
+  <div class="msg" id="panelMsg"></div>
+  <div class="list" id="list"></div>
+</div>
+
+<dialog id="dlg"><form id="form" method="dialog">
+  <h2 id="dlgTitle">New article</h2>
+  <input type="hidden" name="id">
+  <label>Title <span class="count" id="cTitle"></span></label>
+  <input name="title" maxlength="140" required>
+  <div class="row">
+    <div><label>Web address (slug)</label><input name="slug" maxlength="90" placeholder="made from the title if empty"><small class="help" id="slugHelp"></small></div>
+    <div><label>Date it goes live</label><input type="date" name="date" required></div>
+  </div>
+  <label>Meta description (shows on Google) <span class="count" id="cExcerpt"></span></label>
+  <textarea name="excerpt" maxlength="300" rows="2" placeholder="1-2 sentences, about 150 characters"></textarea>
+  <div class="row">
+    <div><label>SEO title (optional) <span class="count" id="cSeo"></span></label><input name="seoTitle" maxlength="70" placeholder="leave empty to use the title"></div>
+    <div><label>Keywords (comma separated)</label><input name="keywords" maxlength="300" placeholder="e.g. instagram marketing, small business"></div>
+  </div>
+  <label>Article text</label>
+  <textarea class="body" name="body" required placeholder="Write the article here.
+
+## A heading
+A normal paragraph. **bold**, *italic*, [a link](https://navifexpro.com/contact)
+
+- a list item
+- another item"></textarea>
+  <small class="help">## for a heading, ### for a smaller heading, - for a list, **bold**, [text](link). Leave an empty line between paragraphs.</small>
+  <div class="row">
+    <div><label>Cover picture (optional)</label><input type="file" name="cover" accept="image/jpeg,image/png,image/webp"><div class="prev" id="prev"></div>
+      <label class="check" id="removeWrap" hidden><input type="checkbox" name="removeCover" value="1"> Remove current picture</label></div>
+    <div><label>Picture description (for Google)</label><input name="coverAlt" maxlength="160"><label>Author</label><input name="author" maxlength="60" placeholder="Sufian Rasheed"></div>
+  </div>
+  <label class="check"><input type="checkbox" name="show" checked> Show on website</label>
+  <div class="msg" id="formMsg"></div>
+  <div class="foot"><button type="button" class="btn" id="cancelBtn">Cancel</button><button class="btn blue" id="saveBtn">Save</button></div>
+</form></dialog>
+
+<script>
+const $ = (s) => document.querySelector(s);
+let posts = [], today = '';
+const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const show = (el, t, ok) => { el.className = 'msg ' + (ok ? 'ok' : 'err'); el.textContent = t; };
+const hide = (el) => { el.className = 'msg'; el.textContent = ''; };
+const slugify = (s) => String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+
+async function call(url, opts = {}) {
+  const r = await fetch(url, { credentials: 'same-origin', ...opts });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && url !== '/api/blog/login') { view('login'); throw new Error(j.error || 'Please log in.'); }
+  if (!r.ok) throw new Error(j.error || 'Something went wrong (' + r.status + ').');
+  return j;
+}
+const post = (url, body) => call(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+
+function view(n) {
+  $('#loginView').hidden = n !== 'login'; $('#setupView').hidden = n !== 'setup';
+  $('#panel').hidden = n !== 'panel'; $('#logoutBtn').hidden = n !== 'panel';
+}
+async function start() {
+  try {
+    const s = await call('/api/blog/status');
+    if (!s.ready) {
+      const miss = [];
+      if (!s.kv) miss.push('the storage (BLOG_KV)');
+      if (!s.password) miss.push('the admin password (ADMIN_PASSWORD)');
+      $('#setupText').textContent = 'Still missing in Cloudflare: ' + miss.join(' and ') + '.';
+      return view('setup');
+    }
+    if (!s.admin) return view('login');
+    view('panel'); await reload();
+  } catch (e) { $('#setupText').textContent = e.message; view('setup'); }
+}
+$('#loginForm').onsubmit = async (e) => {
+  e.preventDefault(); hide($('#loginMsg'));
+  try { await post('/api/blog/login', { password: $('#pw').value }); $('#pw').value = ''; view('panel'); await reload(); }
+  catch (err) { show($('#loginMsg'), err.message); }
+};
+$('#logoutBtn').onclick = async () => { await fetch('/api/blog/logout', { method: 'POST' }); view('login'); };
+
+async function reload() {
+  try { const d = await call('/api/blog/posts'); posts = d.posts; today = d.today; render(); }
+  catch (e) { show($('#panelMsg'), e.message); }
+}
+function render() {
+  const list = [...posts].sort((a, b) => (b.date + b.created).localeCompare(a.date + a.created));
+  const liveN = list.filter((p) => p.show && p.date <= today).length;
+  const hasToday = list.some((p) => p.show && p.date === today);
+  $('#hint').textContent = liveN + ' live, ' + list.length + ' in total. ' + (hasToday ? 'Today\'s article is added.' : 'No article for today (' + today + ') yet.');
+  if (!list.length) { $('#list').innerHTML = '<div class="card empty">No articles yet. Tap “+ New article”.</div>'; return; }
+  $('#list').innerHTML = list.map((p) => {
+    const state = !p.show ? '<span class="tag off">Hidden</span>' : p.date > today ? '<span class="tag later">Scheduled</span>' : '<span class="tag on">Live</span>';
+    return `<div class="card item">${p.cover ? `<img src="/blog-img/${esc(p.cover)}" alt="">` : ''}
+      <div class="b"><b>${esc(p.title)}</b><p>${esc(p.excerpt)}</p>
+      <div class="meta">${state}<span>${esc(p.date)}</span><span>/blog/${esc(p.slug)}</span></div>
+      <div class="acts">
+        <button class="btn sm" data-op="edit" data-id="${p.id}">Edit</button>
+        ${p.show && p.date <= today ? `<a class="btn sm" href="/blog/${esc(p.slug)}" target="_blank" rel="noopener">Open</a>` : ''}
+        <button class="btn sm" data-op="toggle" data-id="${p.id}">${p.show ? 'Hide' : 'Show'}</button>
+        <button class="btn sm red" data-op="delete" data-id="${p.id}">Delete</button>
+      </div></div></div>`;
+  }).join('');
+}
+$('#list').onclick = async (e) => {
+  const b = e.target.closest('button[data-op]'); if (!b) return;
+  const { id, op } = b.dataset;
+  if (op === 'edit') return openForm(id);
+  if (op === 'delete' && !confirm('Delete this article for good? This cannot be undone. Tip: use "Hide" if you may want it back.')) return;
+  b.disabled = true;
+  try { await post('/api/blog/action', { id, op }); await reload(); }
+  catch (err) { show($('#panelMsg'), err.message); b.disabled = false; }
+};
+$('#addBtn').onclick = () => openForm('');
+$('#cancelBtn').onclick = () => $('#dlg').close();
+
+const f = $('#form');
+const counters = () => {
+  $('#cTitle').textContent = f.title.value.length + '/60 best';
+  $('#cExcerpt').textContent = f.excerpt.value.length + '/155 best';
+  $('#cSeo').textContent = f.seoTitle.value.length + '/60';
+  $('#slugHelp').textContent = 'navifexpro.com/blog/' + (slugify(f.slug.value || f.title.value) || '...');
+};
+['input', 'change'].forEach((ev) => f.addEventListener(ev, counters));
+
+function openForm(id) {
+  const p = id ? posts.find((x) => x.id === id) : null;
+  f.reset(); hide($('#formMsg'));
+  $('#dlgTitle').textContent = p ? 'Edit article' : 'New article';
+  f.id.value = id || '';
+  for (const k of ['title', 'slug', 'excerpt', 'seoTitle', 'keywords', 'body', 'coverAlt', 'author']) f[k].value = p ? p[k] || '' : '';
+  f.date.value = p ? p.date : today;
+  f.show.checked = p ? !!p.show : true;
+  $('#prev').innerHTML = p && p.cover ? `<img src="/blog-img/${esc(p.cover)}" alt="">` : '';
+  $('#removeWrap').hidden = !(p && p.cover);
+  counters();
+  $('#dlg').showModal();
+}
+
+// shrink the cover in the browser (max 1600px wide, JPEG)
+function shrink(file) {
+  return new Promise((resolve) => {
+    if (!file || !file.size) return resolve(null);
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, 1600 / img.width);
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob((b) => resolve(b ? new File([b], 'cover.jpg', { type: 'image/jpeg' }) : file), 'image/jpeg', 0.85);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+f.onsubmit = async (e) => {
+  e.preventDefault(); hide($('#formMsg'));
+  $('#saveBtn').disabled = true; $('#saveBtn').textContent = 'Saving…';
+  try {
+    const fd = new FormData();
+    for (const k of ['id', 'title', 'slug', 'excerpt', 'seoTitle', 'keywords', 'body', 'coverAlt', 'author', 'date']) fd.append(k, f[k].value);
+    fd.append('show', f.show.checked ? '1' : '0');
+    if (f.removeCover.checked) fd.append('removeCover', '1');
+    const c = await shrink(f.cover.files[0]); if (c) fd.append('cover', c);
+    await call('/api/blog/post', { method: 'POST', body: fd });
+    $('#dlg').close(); await reload();
+  } catch (err) { show($('#formMsg'), err.message); }
+  $('#saveBtn').disabled = false; $('#saveBtn').textContent = 'Save';
+};
+start();
+</script>
+</body>
+</html>

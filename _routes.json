@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "include": ["/blog", "/blog/*", "/blog-img/*", "/blog-admin", "/blog-admin/", "/blog-template", "/blog-template.html", "/api/blog/*", "/sitemap.xml"],
+  "exclude": []
+}
