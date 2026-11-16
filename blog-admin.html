@@ -92,7 +92,7 @@ dialog h2{font-size:21px}
 <div class="wrap" id="panel" hidden>
   <div class="head">
     <div><b>Articles</b><div class="muted" id="hint"></div></div>
-    <button class="btn blue" id="addBtn">+ New article</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn" style="margin:0;cursor:pointer">Import file<input type="file" id="importFile" accept=".json,application/json" hidden></label><button class="btn blue" id="addBtn">+ New article</button></div>
   </div>
   <div class="msg" id="panelMsg"></div>
   <div class="list" id="list"></div>
@@ -207,6 +207,29 @@ $('#list').onclick = async (e) => {
   catch (err) { show($('#panelMsg'), err.message); b.disabled = false; }
 };
 $('#addBtn').onclick = () => openForm('');
+
+// Bulk import: a JSON list of articles [{title, slug, excerpt, keywords, body, date?, seoTitle?}]
+$('#importFile').onchange = async (e) => {
+  const file = e.target.files[0]; e.target.value = '';
+  if (!file) return;
+  let list;
+  try { list = JSON.parse(await file.text()); if (!Array.isArray(list)) throw new Error(); }
+  catch { return show($('#panelMsg'), 'This file is not a valid article list.'); }
+  const existing = new Set(posts.map((p) => p.slug));
+  let ok = 0, skipped = 0, failed = [];
+  for (let i = 0; i < list.length; i++) {
+    const a = list[i];
+    show($('#panelMsg'), `Importing ${i + 1} of ${list.length}…`, true);
+    if (a.slug && existing.has(a.slug)) { skipped++; continue; }
+    const fd = new FormData();
+    for (const k of ['title', 'slug', 'excerpt', 'seoTitle', 'keywords', 'body', 'coverAlt', 'author', 'date']) if (a[k]) fd.append(k, a[k]);
+    fd.append('show', a.show === false ? '0' : '1');
+    try { await call('/api/blog/post', { method: 'POST', body: fd }); ok++; }
+    catch (err) { failed.push((a.title || '?') + ': ' + err.message); }
+  }
+  await reload();
+  show($('#panelMsg'), `Imported ${ok}. Skipped ${skipped} (already there).` + (failed.length ? ` Failed ${failed.length}: ${failed.join(' | ')}` : ''), !failed.length);
+};
 $('#cancelBtn').onclick = () => $('#dlg').close();
 
 const f = $('#form');
