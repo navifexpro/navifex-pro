@@ -224,8 +224,14 @@ $('#importFile').onchange = async (e) => {
     const fd = new FormData();
     for (const k of ['title', 'slug', 'excerpt', 'seoTitle', 'keywords', 'body', 'coverAlt', 'author', 'date']) if (a[k]) fd.append(k, a[k]);
     fd.append('show', a.show === false ? '0' : '1');
-    try { await call('/api/blog/post', { method: 'POST', body: fd }); ok++; }
-    catch (err) { failed.push((a.title || '?') + ': ' + err.message); }
+    // storage accepts about one save per second, so pause and retry if it is busy
+    let done = false, lastErr = '';
+    for (let t = 0; t < 4 && !done; t++) {
+      await new Promise((r) => setTimeout(r, t ? 3000 : 1500));
+      try { await call('/api/blog/post', { method: 'POST', body: fd }); done = true; }
+      catch (err) { lastErr = err.message; if (!/429|Too Many/i.test(lastErr)) break; }
+    }
+    if (done) ok++; else failed.push((a.title || '?') + ': ' + lastErr);
   }
   await reload();
   show($('#panelMsg'), `Imported ${ok}. Skipped ${skipped} (already there).` + (failed.length ? ` Failed ${failed.length}: ${failed.join(' | ')}` : ''), !failed.length);
