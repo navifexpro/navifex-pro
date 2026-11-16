@@ -80,7 +80,7 @@ function md(src) {
     const l = raw.trim();
     let m;
     if (!l) { flushP(); flushL(); continue; }
-    if ((m = l.match(/^(#{2,3})\s+(.*)$/))) { flushP(); flushL(); const h = m[1].length; out += `<h${h}>${inline(m[2])}</h${h}>\n`; continue; }
+    if ((m = l.match(/^(#{2,3})\s+(.*)$/))) { flushP(); flushL(); const h = m[1].length; out += `<h${h} id="${slugify(m[2])}">${inline(m[2])}</h${h}>\n`; continue; }
     if ((m = l.match(/^[-*]\s+(.*)$/))) { flushP(); if (list !== 'ul') { flushL(); out += '<ul>'; list = 'ul'; } out += `<li>${inline(m[1])}</li>`; continue; }
     if ((m = l.match(/^\d+[.)]\s+(.*)$/))) { flushP(); if (list !== 'ol') { flushL(); out += '<ol>'; list = 'ol'; } out += `<li>${inline(m[1])}</li>`; continue; }
     if ((m = l.match(/^>\s?(.*)$/))) { flushP(); flushL(); out += `<blockquote><p>${inline(m[1])}</p></blockquote>\n`; continue; }
@@ -91,6 +91,55 @@ function md(src) {
 }
 const plain = (src) => String(src || '').replace(/[#>*_`\[\]]/g, '').replace(/\(https?:[^)]*\)/g, '').replace(/\s+/g, ' ').trim();
 const imgUrl = (id) => (id ? `/blog-img/${id}` : '');
+
+
+// ---------- look & feel helpers ----------
+const CATS = [
+  { key: 'ads', name: 'Ads', color: '#2f7bff', re: /\bads?\b|advertis|retarget|budget|ppc|roas/ },
+  { key: 'seo', name: 'SEO & Google', color: '#22c55e', re: /seo|google business|review|rank|blog post/ },
+  { key: 'web', name: 'Websites', color: '#f59e0b', re: /website|landing page|shopify|ecommerce|store/ },
+  { key: 'social', name: 'Social Media', color: '#ec4899', re: /social|instagram|reel|caption|content|video|photo|brand/ },
+  { key: 'growth', name: 'Growth & Sales', color: '#a78bfa', re: /.*/ },
+];
+const catOf = (p) => CATS.find((c) => c.key === p.category) || CATS.find((c) => c.re.test(`${p.title} ${p.keywords || ''}`.toLowerCase()));
+const readMins = (body) => Math.max(1, Math.round(String(body || '').split(/\s+/).length / 200));
+const coverOf = (p) => (p.cover ? imgUrl(p.cover) : `/blog-cover/${p.slug}.svg`);
+function wrap(text, max) {
+  const out = []; let line = '';
+  for (const w of String(text).split(/\s+/)) {
+    if ((line + ' ' + w).trim().length > max && line) { out.push(line); line = w; } else line = (line + ' ' + w).trim();
+  }
+  if (line) out.push(line);
+  return out;
+}
+function coverSvg(p) {
+  const c = catOf(p);
+  let lines = wrap(p.title, 24);
+  const size = lines.length > 3 ? 54 : 64;
+  if (lines.length > 4) { lines = lines.slice(0, 4); lines[3] += '…'; }
+  const top = 360 - (lines.length * size * 1.18) / 2;
+  const t = lines.map((l, i) => `<text x="80" y="${(top + (i + 0.85) * size * 1.18).toFixed(0)}" font-family="Georgia, 'Playfair Display', serif" font-size="${size}" fill="#f5f7fb">${esc(l)}</text>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1526"/><stop offset="1" stop-color="#060a14"/></linearGradient>
+<radialGradient id="r" cx=".85" cy=".15" r=".7"><stop offset="0" stop-color="${c.color}" stop-opacity=".45"/><stop offset="1" stop-color="${c.color}" stop-opacity="0"/></radialGradient>
+<pattern id="d" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#ffffff" opacity=".07"/></pattern></defs>
+<rect width="1200" height="675" fill="url(#g)"/><rect width="1200" height="675" fill="url(#d)"/><rect width="1200" height="675" fill="url(#r)"/>
+<circle cx="1040" cy="150" r="190" fill="none" stroke="${c.color}" stroke-opacity=".35" stroke-width="2"/><circle cx="1040" cy="150" r="120" fill="none" stroke="${c.color}" stroke-opacity=".2" stroke-width="2"/>
+<rect x="80" y="70" rx="18" width="${c.name.length * 13 + 44}" height="36" fill="${c.color}" fill-opacity=".18" stroke="${c.color}" stroke-opacity=".6"/>
+<text x="102" y="94" font-family="Manrope, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="2" fill="${c.color}">${esc(c.name.toUpperCase())}</text>
+${t}
+<rect x="80" y="585" width="56" height="4" rx="2" fill="${c.color}"/>
+<text x="80" y="625" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700" fill="#f5f7fb">Navifex <tspan font-style="italic" fill="#8fc1ff">Pro</tspan></text>
+<text x="1120" y="625" text-anchor="end" font-family="Manrope, Arial, sans-serif" font-size="18" fill="#93a1bd">navifexpro.com/blog</text></svg>`;
+}
+function card(p, big) {
+  const c = catOf(p);
+  return `<a class="b-card${big ? ' b-feat' : ''}" href="/blog/${p.slug}" data-cat="${c.key}">
+  <span class="b-img"><img src="${coverOf(p)}" alt="${esc(p.coverAlt || p.title)}" loading="${big ? 'eager' : 'lazy'}" decoding="async" width="1200" height="675"></span>
+  <span class="b-in"><span class="b-tag" style="--c:${c.color}">${esc(c.name)}</span><h2>${esc(p.title)}</h2><p>${esc(p.excerpt)}</p>
+  <span class="b-meta"><time datetime="${p.date}">${fmtDate(p.date)}</time> · ${readMins(p.body)} min read</span>${big ? '<span class="b-go">Read article →</span>' : ''}</span>
+</a>`;
+}
 
 // ---------- pages ----------
 async function template(env, url) {
@@ -130,11 +179,12 @@ function render(res, o) {
 
 async function blogIndex(req, env, url) {
   const posts = env.BLOG_KV ? live(await load(env)) : [];
-  const cards = posts.map((p) => `<a class="b-card" href="/blog/${p.slug}">
-  ${p.cover ? `<img src="${imgUrl(p.cover)}" alt="${esc(p.coverAlt || p.title)}" loading="lazy" decoding="async" width="1200" height="675">` : ''}
-  <div class="b-in"><time datetime="${p.date}">${fmtDate(p.date)}</time><h2>${esc(p.title)}</h2><p>${esc(p.excerpt)}</p></div>
-</a>`).join('\n');
-  const body = posts.length ? `<div class="blog-list">${cards}</div>` : '<p class="b-empty">New articles are coming soon.</p>';
+  const used = CATS.filter((c) => posts.some((p) => catOf(p) === c));
+  const chips = `<div class="b-chips" role="tablist"><button class="on" data-f="all">All articles</button>${used.map((c) => `<button data-f="${c.key}" style="--c:${c.color}">${esc(c.name)}</button>`).join('')}</div>`;
+  const body = posts.length
+    ? `${card(posts[0], true)}${chips}<div class="blog-list" id="bList">${posts.slice(1).map((p) => card(p)).join('\n')}</div>
+<script>document.addEventListener('click',function(e){var b=e.target.closest('.b-chips button');if(!b)return;var f=b.dataset.f;document.querySelectorAll('.b-chips button').forEach(function(x){x.classList.toggle('on',x===b)});document.querySelectorAll('#bList .b-card').forEach(function(c){c.hidden=f!=='all'&&c.dataset.cat!==f});var ft=document.querySelector('.b-feat');if(ft)ft.hidden=f!=='all'&&ft.dataset.cat!==f;});</script>`
+    : '<p class="b-empty">New articles are coming soon.</p>';
   const title = 'Blog | Navifex Pro';
   const desc = 'Practical digital marketing tips for small businesses: social media, ads, SEO and websites, from the Navifex Pro team.';
   return render(await template(env, url), {
@@ -154,13 +204,19 @@ async function blogPost(req, env, url, slug) {
   const postUrl = `${SITE}/blog/${p.slug}`;
   const image = p.cover ? SITE + imgUrl(p.cover) : '';
   const tags = (p.keywords || '').split(',').map((t) => t.trim()).filter(Boolean);
+  const c = catOf(p);
+  const all = live(await load(env));
+  const related = all.filter((x) => x !== p && catOf(x) === c).concat(all.filter((x) => x !== p && catOf(x) !== c)).slice(0, 3);
+  const toc = String(p.body || '').split('\n').filter((l) => /^##\s+/.test(l.trim())).map((l) => l.trim().replace(/^##\s+/, ''));
   const body = `<article class="post">
-  ${p.cover ? `<img class="post-cover" src="${imgUrl(p.cover)}" alt="${esc(p.coverAlt || p.title)}" width="1200" height="675" fetchpriority="high">` : ''}
-  <p class="post-meta">By ${esc(p.author || 'Sufian Rasheed')} · <time datetime="${p.date}">${fmtDate(p.date)}</time></p>
+  <img class="post-cover" src="${coverOf(p)}" alt="${esc(p.coverAlt || p.title)}" width="1200" height="675" fetchpriority="high">
+  <p class="post-meta"><span class="b-tag" style="--c:${c.color}">${esc(c.name)}</span> By ${esc(p.author || 'Sufian Rasheed')} · <time datetime="${p.date}">${fmtDate(p.date)}</time> · ${readMins(p.body)} min read</p>
+  ${toc.length > 2 ? `<nav class="post-toc" aria-label="In this article"><b>In this article</b><ol>${toc.map((h) => `<li><a href="#${slugify(h)}">${inline(h)}</a></li>`).join('')}</ol></nav>` : ''}
   <div class="post-body">${md(p.body)}</div>
   ${tags.length ? `<div class="post-tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
-  <a class="post-back" href="/blog">← All articles</a>
-</article>`;
+  <aside class="post-cta"><div><b>Want this done for your business?</b><p>Book a free 30-minute call. We'll look at where you are and suggest a simple plan.</p></div><a class="btn btn-primary" href="/contact#book"><span>Book a free call</span></a></aside>
+</article>
+${related.length ? `<section class="post-rel"><h2>Keep reading</h2><div class="blog-list">${related.map((x) => card(x)).join('')}</div><a class="post-back" href="/blog">← All articles</a></section>` : ''}`;
   return render(await template(env, url), {
     title: `${p.seoTitle || p.title} | Navifex Pro`, desc: p.excerpt, url: postUrl, type: 'article', image, keywords: p.keywords, date: p.date,
     label: 'Article', crumbs: `<li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li aria-current="page">${esc(p.title)}</li>`,
@@ -294,6 +350,12 @@ export default {
       if (path === '/blog') return await blogIndex(req, env, url);
       if (path === '/blog/feed.xml') return await rss(env);
       if (path.startsWith('/blog-img/')) return await image(env, path.slice(10));
+      const cv = path.match(/^\/blog-cover\/([a-z0-9-]{1,90})\.svg$/);
+      if (cv) {
+        const p = env.BLOG_KV ? (await load(env)).find((x) => x.slug === cv[1]) : null;
+        if (!p) return new Response('Not found', { status: 404 });
+        return new Response(coverSvg(p), { headers: { 'content-type': 'image/svg+xml; charset=utf-8', 'cache-control': 'public, max-age=86400' } });
+      }
       const m = path.match(/^\/blog\/([a-z0-9-]{1,90})\/?$/);
       if (m) return await blogPost(req, env, url, m[1]);
       if (path === '/sitemap.xml') return await sitemap(env, url);
