@@ -272,6 +272,17 @@ async function image(env, id) {
   return new Response(value, { headers: { 'content-type': (metadata && metadata.type) || 'image/jpeg', 'cache-control': 'public, max-age=31536000, immutable' } });
 }
 
+// Single sign-on from the main admin (bot.navifexpro.com/admin). Works when both
+// projects use the same ADMIN_PASSWORD. The link is valid for 60 seconds.
+async function ssoOk(url, env) {
+  const t = url.searchParams.get('sso');
+  if (!t || !env.ADMIN_PASSWORD) return false;
+  const [exp, sig] = t.split('.');
+  const now = Date.now();
+  if (!exp || !sig || +exp < now || +exp > now + 120e3) return false;
+  return safeEqual(sig, await hmac(env.ADMIN_PASSWORD, 'sso|blog|' + exp));
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -287,6 +298,10 @@ export default {
       if (m) return await blogPost(req, env, url, m[1]);
       if (path === '/sitemap.xml') return await sitemap(env, url);
       if (path === '/blog-admin' || path === '/blog-admin/') {
+        if (url.searchParams.has('sso')) {
+          const ok = await ssoOk(url, env);
+          return new Response(null, { status: 302, headers: { Location: '/blog-admin', 'Cache-Control': 'no-store', ...(ok ? { 'Set-Cookie': cookie(await makeToken(env), SESSION_DAYS * 86400) } : {}) } });
+        }
         const r = await env.ASSETS.fetch(new Request(new URL('/blog-admin', url), req));
         const h = new Headers(r.headers);
         h.set('x-robots-tag', 'noindex, nofollow'); h.set('cache-control', 'no-store');
