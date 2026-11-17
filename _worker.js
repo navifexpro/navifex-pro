@@ -33,7 +33,9 @@ async function makeToken(env) {
 }
 async function isAdmin(req, env) {
   if (!env.ADMIN_PASSWORD) return false;
-  const m = (req.headers.get('cookie') || '').match(new RegExp('(?:^|;\\s*)' + COOKIE + '=([^;]+)'));
+  // The blog editor now lives in the main admin (bot.navifexpro.com/admin/blog); it sends a short signed token.
+  const hdr = req.headers.get('x-nvx-blog-token');
+  const m = hdr ? [null, hdr] : (req.headers.get('cookie') || '').match(new RegExp('(?:^|;\\s*)' + COOKIE + '=([^;]+)'));
   if (!m) return false;
   const [exp, sig] = m[1].split('.');
   if (!exp || !sig || +exp < Date.now()) return false;
@@ -381,15 +383,9 @@ export default {
       const m = path.match(/^\/blog\/([a-z0-9-]{1,90})\/?$/);
       if (m) return await blogPost(req, env, url, m[1]);
       if (path === '/sitemap.xml') return await sitemap(env, url);
-      if (path === '/blog-admin' || path === '/blog-admin/') {
-        if (url.searchParams.has('sso')) {
-          const ok = await ssoOk(url, env);
-          return new Response(null, { status: 302, headers: { Location: '/blog-admin', 'Cache-Control': 'no-store', ...(ok ? { 'Set-Cookie': cookie(await makeToken(env), SESSION_DAYS * 86400) } : {}) } });
-        }
-        const r = await env.ASSETS.fetch(new Request(new URL('/blog-admin', url), req));
-        const h = new Headers(r.headers);
-        h.set('x-robots-tag', 'noindex, nofollow'); h.set('cache-control', 'no-store');
-        return new Response(r.body, { status: r.status, headers: h });
+      // One admin for everything (17 Nov 2026): the blog editor moved into the main admin.
+      if (path === '/blog-admin' || path === '/blog-admin/' || path === '/blog-admin.html') {
+        return new Response(null, { status: 302, headers: { Location: 'https://bot.navifexpro.com/admin/blog', 'Cache-Control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       }
       if (path === '/blog-template' || path === '/blog-template.html') return new Response('Not found', { status: 404 });
       return env.ASSETS.fetch(req);
