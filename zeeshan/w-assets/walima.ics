@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Navifex Pro//Wedding//EN
+BEGIN:VEVENT
+UID:walima-zeeshan-2027@navifexpro.com
+DTSTAMP:20261117T000000Z
+DTSTART:20270117T090000Z
+DTEND:20270117T120000Z
+SUMMARY:Walima Reception – Syed Zeeshan Haider
+LOCATION:Nazir's Fort (Marriage Palace)\, Adda Bath\, Multan Road\, Lahore
+DESCRIPTION:Location: https://maps.app.goo.gl/fuGrgvhN6NtdMHFCA
+END:VEVENT
+END:VCALENDAR

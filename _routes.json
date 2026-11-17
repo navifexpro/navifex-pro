@@ -10,7 +10,14 @@
     "/blog-template.html",
     "/api/blog/*",
     "/sitemap.xml",
-    "/blog-cover/*"
+    "/blog-cover/*",
+    "/all",
+    "/all/",
+    "/mw",
+    "/mw/",
+    "/walima",
+    "/walima/",
+    "/w-assets/*"
   ],
   "exclude": []
 }

@@ -347,10 +347,24 @@ async function ssoOk(url, env) {
   return safeEqual(sig, await hmac(env.ADMIN_PASSWORD, 'sso|blog|' + exp));
 }
 
+// Wedding invitation site served on zeeshan.navifexpro.com from /zeeshan/ (static files).
+const WEDDING_HOST = 'zeeshan.navifexpro.com';
+function wedding(req, env, url) {
+  const p = url.pathname;
+  let to = null;
+  if (p === '/' || p === '/all' || p === '/all/') to = '/zeeshan/all/';
+  else if (p === '/mw' || p === '/mw/') to = '/zeeshan/mw/';
+  else if (p === '/walima' || p === '/walima/') to = '/zeeshan/walima/';
+  else if (p.startsWith('/w-assets/')) to = '/zeeshan' + p;
+  if (!to) return new Response(null, { status: 302, headers: { Location: '/all' } });
+  return env.ASSETS.fetch(new Request(new URL(to, url), req));
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     let path = url.pathname;
+    if (url.hostname === WEDDING_HOST) return wedding(req, env, url);
     try {
       if (path.startsWith('/api/blog/')) return await api(req, env, path);
       if (req.method !== 'GET' && req.method !== 'HEAD') return new Response('Method not allowed', { status: 405 });
