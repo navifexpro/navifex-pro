@@ -697,3 +697,9 @@ h1 em,h2 em,.h-sub em{font-style:italic;color:var(--blue-ink)}
   .svc-card:hover,.feat:hover,.pr-card:hover,.concept:hover,.c-item:hover,.work:hover .frame{transform:none}
 }
 @media print{.site-header,.wa-float,.to-top,.ck,.intro-ov,#sbc-btn{display:none!important}}
+
+/* photo set (Nov 2026): real photos replace flat illustrations */
+.ph img{object-position:50% 50%}
+.hero-ph img{object-position:58% 50%}
+.cat .ph img{object-position:50% 55%}
+.ph:not(.ill){background:#e9e6df}

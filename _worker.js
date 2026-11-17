@@ -112,25 +112,33 @@ function wrap(text, max) {
   if (line) out.push(line);
   return out;
 }
-function coverSvg(p) {
+function coverSvg(p, b64) {
   const c = catOf(p);
   let lines = wrap(p.title, 24);
   const size = lines.length > 3 ? 54 : 64;
   if (lines.length > 4) { lines = lines.slice(0, 4); lines[3] += '…'; }
   const top = 360 - (lines.length * size * 1.18) / 2;
-  const t = lines.map((l, i) => `<text x="80" y="${(top + (i + 0.85) * size * 1.18).toFixed(0)}" font-family="Georgia, 'Playfair Display', serif" font-size="${size}" fill="#f5f7fb">${esc(l)}</text>`).join('');
+  const t = lines.map((l, i) => `<text x="80" y="${(top + (i + 0.85) * size * 1.18).toFixed(0)}" font-family="Georgia, 'Playfair Display', serif" font-size="${size}" fill="#0d1526">${esc(l)}</text>`).join('');
+  const photo = b64 ? `<image href="data:image/jpeg;base64,${b64}" x="0" y="0" width="1200" height="675" preserveAspectRatio="xMidYMid slice"/>` : `<rect width="1200" height="675" fill="#f3f1ec"/>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1526"/><stop offset="1" stop-color="#060a14"/></linearGradient>
-<radialGradient id="r" cx=".85" cy=".15" r=".7"><stop offset="0" stop-color="${c.color}" stop-opacity=".45"/><stop offset="1" stop-color="${c.color}" stop-opacity="0"/></radialGradient>
-<pattern id="d" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#ffffff" opacity=".07"/></pattern></defs>
-<rect width="1200" height="675" fill="url(#g)"/><rect width="1200" height="675" fill="url(#d)"/><rect width="1200" height="675" fill="url(#r)"/>
-<circle cx="1040" cy="150" r="190" fill="none" stroke="${c.color}" stroke-opacity=".35" stroke-width="2"/><circle cx="1040" cy="150" r="120" fill="none" stroke="${c.color}" stroke-opacity=".2" stroke-width="2"/>
-<rect x="80" y="70" rx="18" width="${c.name.length * 13 + 44}" height="36" fill="${c.color}" fill-opacity=".18" stroke="${c.color}" stroke-opacity=".6"/>
+<defs><linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".92"/><stop offset=".55" stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient></defs>
+${photo}<rect width="1200" height="675" fill="url(#w)"/>
+<rect x="80" y="70" rx="18" width="${c.name.length * 13 + 44}" height="36" fill="${c.color}" fill-opacity=".14" stroke="${c.color}" stroke-opacity=".7"/>
 <text x="102" y="94" font-family="Manrope, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="2" fill="${c.color}">${esc(c.name.toUpperCase())}</text>
 ${t}
 <rect x="80" y="585" width="56" height="4" rx="2" fill="${c.color}"/>
-<text x="80" y="625" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700" fill="#f5f7fb">Navifex <tspan font-style="italic" fill="#8fc1ff">Pro</tspan></text>
-<text x="1120" y="625" text-anchor="end" font-family="Manrope, Arial, sans-serif" font-size="18" fill="#93a1bd">navifexpro.com/blog</text></svg>`;
+<text x="80" y="625" font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="700" fill="#0d1526">Navifex <tspan font-style="italic" fill="#2f7bff">Pro</tspan></text>
+<text x="1120" y="625" text-anchor="end" font-family="Manrope, Arial, sans-serif" font-size="18" fill="#5b6b8a">navifexpro.com/blog</text></svg>`;
+}
+const bgOf = (p) => `/assets/img/blog-bg/${catOf(p).key}.jpg`;
+async function bgB64(env, url, p) {
+  try {
+    const r = await env.ASSETS.fetch(new Request(new URL(bgOf(p), url)));
+    if (!r.ok) return '';
+    const buf = new Uint8Array(await r.arrayBuffer()); let s = '';
+    for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+    return btoa(s);
+  } catch (e) { return ''; }
 }
 function card(p, big) {
   const c = catOf(p);
@@ -202,7 +210,7 @@ async function blogPost(req, env, url, slug) {
   const p = env.BLOG_KV ? live(await load(env)).find((x) => x.slug === slug) : null;
   if (!p) return env.ASSETS.fetch(new Request(new URL('/404.html', url))).then((r) => new Response(r.body, { status: 404, headers: r.headers }));
   const postUrl = `${SITE}/blog/${p.slug}`;
-  const image = p.cover ? SITE + imgUrl(p.cover) : '';
+  const image = p.cover ? SITE + imgUrl(p.cover) : SITE + bgOf(p);
   const tags = (p.keywords || '').split(',').map((t) => t.trim()).filter(Boolean);
   const c = catOf(p);
   const all = live(await load(env));
@@ -354,7 +362,7 @@ export default {
       if (cv) {
         const p = env.BLOG_KV ? (await load(env)).find((x) => x.slug === cv[1]) : null;
         if (!p) return new Response('Not found', { status: 404 });
-        return new Response(coverSvg(p), { headers: { 'content-type': 'image/svg+xml; charset=utf-8', 'cache-control': 'public, max-age=86400' } });
+        return new Response(coverSvg(p, await bgB64(env, url, p)), { headers: { 'content-type': 'image/svg+xml; charset=utf-8', 'cache-control': 'public, max-age=86400' } });
       }
       const m = path.match(/^\/blog\/([a-z0-9-]{1,90})\/?$/);
       if (m) return await blogPost(req, env, url, m[1]);
