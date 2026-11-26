@@ -710,7 +710,7 @@ h1 em,h2 em,.h-sub em{font-style:italic;color:var(--blue-ink)}
 .sm-steps span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:15px;margin-bottom:12px}
 .sm-steps b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;margin-bottom:6px}
 .sm-steps p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
-.sm-brands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.sm-brands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .sm-brand{background:var(--card);border:1px solid var(--bd);border-radius:var(--rc);overflow:hidden;display:flex;flex-direction:column}
 .sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#000}
 .sm-grid img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
