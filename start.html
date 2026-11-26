@@ -77,8 +77,8 @@ header a.back{color:#fff;display:flex;padding:4px}
 .typing .b{padding:10px 14px}.dots{display:inline-flex;gap:4px}.dots i{width:7px;height:7px;border-radius:50%;background:#9aa6ac;animation:bl 1.2s infinite}.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
 @keyframes bl{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 footer{flex:none;display:flex;align-items:flex-end;gap:6px;padding:6px 8px;padding-bottom:max(6px,env(safe-area-inset-bottom));background:var(--bar);position:relative}
-.box{flex:1;display:flex;align-items:flex-end;background:#fff;border-radius:22px;padding:4px 6px;min-height:44px}
-.box textarea{flex:1;border:0;outline:0;resize:none;font:inherit;font-size:16px;line-height:1.35;padding:8px 6px;max-height:120px;background:transparent;color:var(--ink)}
+.box{flex:1;min-width:0;display:flex;align-items:flex-end;background:#fff;border-radius:22px;padding:4px 6px;min-height:44px}
+.box textarea{flex:1;min-width:0;width:100%;border:0;outline:0;resize:none;font:inherit;font-size:16px;line-height:1.35;padding:8px 6px;max-height:120px;background:transparent;color:var(--ink)}
 .ib{background:none;border:0;color:#54656f;width:40px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;flex:none}
 .ib:hover{color:#3b4a54}
 .send{width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.2)}
