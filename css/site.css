@@ -703,3 +703,23 @@ h1 em,h2 em,.h-sub em{font-style:italic;color:var(--blue-ink)}
 .hero-ph img{object-position:58% 50%}
 .cat .ph img{object-position:50% 55%}
 .ph:not(.ill){background:#e9e6df}
+
+/* social work (work page) */
+.sm-steps{list-style:none;margin:0 0 40px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;counter-reset:s}
+.sm-steps li{background:var(--card);border:1px solid var(--bd);border-radius:var(--rc);padding:22px}
+.sm-steps span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:15px;margin-bottom:12px}
+.sm-steps b{display:block;font-family:var(--serif);font-weight:400;font-size:22px;margin-bottom:6px}
+.sm-steps p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
+.sm-brands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.sm-brand{background:var(--card);border:1px solid var(--bd);border-radius:var(--rc);overflow:hidden;display:flex;flex-direction:column}
+.sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#000}
+.sm-grid img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
+.sm-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.sm-body small{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sm-body h3{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.2;margin:0}
+.sm-body p{margin:0;color:var(--muted);font-size:15.5px}
+.sm-plats{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.sm-plats li{font-size:12.5px;padding:4px 10px;border:1px solid var(--bd);border-radius:99px;color:var(--muted)}
+.sm-body .more{margin-top:auto;padding-top:8px;font-size:15px;align-self:flex-start}
+@media (max-width:899px){.sm-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.sm-brands{grid-template-columns:1fr}}
+@media (max-width:479px){.sm-steps{gap:10px}.sm-steps li{padding:16px}.sm-steps b{font-size:19px}.sm-steps p{font-size:14px}.sm-body{padding:18px}}
