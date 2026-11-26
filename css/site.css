@@ -778,3 +778,27 @@ h1 em,h2 em,.h-sub em{font-style:italic;color:var(--blue-ink)}
 .cv-ad .ad-h b{font-size:11px;font-weight:700}.cv-ad .ad-img b{font-size:13px;font-weight:700;line-height:1.2}
 .cv-g .res small b{font-weight:700}.cv-lead .sh b{font-weight:700;font-size:10px}
 @media (max-width:559px){.concepts{grid-template-columns:1fr!important;gap:12px!important}.concept>b{font-size:20px!important}.concept>span:not(.more){font-size:15px!important}.concept>small{font-size:12px!important}}
+/* phone-friendly layout: stack boxes on small screens */
+@media (max-width:559px){
+  .hero-card{grid-template-columns:1fr!important;gap:14px!important;padding:12px!important}
+  .hero-card .hero-txt{padding:18px 12px 4px!important}
+  .hero-ph,.hero-ph.arch{aspect-ratio:16/10!important;border-radius:16px!important;max-height:260px}
+  .hero-ph img{object-fit:cover;width:100%;height:100%}
+  .cta-band{grid-template-columns:1fr!important;padding:12px!important}
+  .cta-band .cta-ph{display:none}
+  .cta-band .cta-txt{padding:22px 14px!important}
+  .feats:not(.two),.feats:not(.two):has(>:nth-child(3):last-child){grid-template-columns:1fr!important;gap:10px!important}
+  .months,.months.facts{grid-template-columns:1fr!important;gap:10px!important}
+  .offer{grid-template-columns:1fr!important;padding:12px!important}
+  .split{grid-template-columns:1fr!important;gap:14px!important}
+  .steps,.steps.four,.steps.five{grid-template-columns:1fr!important;gap:18px!important}
+  .steps-line{display:none!important}
+  .svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .cats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+  .form-grid{grid-template-columns:1fr!important}
+  .c-side{grid-template-columns:1fr!important}
+  .ow-grid,.rv-grid,.promise{grid-template-columns:1fr!important}
+  .split-head{grid-template-columns:1fr!important;display:block!important}
+  .split-head>p{margin-top:10px}
+  .fn-grid{grid-template-columns:1fr!important}
+}
