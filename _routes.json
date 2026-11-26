@@ -17,7 +17,9 @@
     "/mw/",
     "/walima",
     "/walima/",
-    "/w-assets/*"
+    "/w-assets/*",
+    "/admin",
+    "/admin/*"
   ],
   "exclude": []
 }

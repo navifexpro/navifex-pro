@@ -362,12 +362,39 @@ function wedding(req, env, url) {
   return env.ASSETS.fetch(new Request(new URL(to, url), req));
 }
 
+// navifexpro.com/admin (27 Nov 2026): the Navifex admin lives in the sufian-bot project
+// (bot.navifexpro.com/admin). This passes requests through so the address stays navifexpro.com/admin.
+const ADMIN_ORIGIN = 'https://bot.navifexpro.com';
+async function adminProxy(req, env, url) {
+  const h = new Headers();
+  for (const k of ['cookie', 'content-type', 'origin', 'accept', 'user-agent', 'accept-language']) {
+    const v = req.headers.get(k);
+    if (v) h.set(k, v);
+  }
+  const ip = req.headers.get('CF-Connecting-IP') || '';
+  if (ip && env.ADMIN_PASSWORD) h.set('x-nvx-ip', ip + '|' + (await hmac(env.ADMIN_PASSWORD, 'ip|' + ip)));
+  const init = { method: req.method, headers: h, redirect: 'manual' };
+  if (req.method !== 'GET' && req.method !== 'HEAD') init.body = await req.arrayBuffer();
+  const r = await fetch(ADMIN_ORIGIN + url.pathname + url.search, init);
+  const out = new Headers();
+  for (const [k, v] of r.headers) {
+    if (['content-type', 'cache-control', 'location', 'content-disposition', 'x-frame-options'].includes(k)) out.set(k, v);
+  }
+  for (const c of r.headers.getSetCookie ? r.headers.getSetCookie() : []) out.append('set-cookie', c);
+  const loc = out.get('location');
+  if (loc && loc.startsWith(ADMIN_ORIGIN + '/admin')) out.set('location', loc.slice(ADMIN_ORIGIN.length));
+  out.set('x-robots-tag', 'noindex, nofollow');
+  if (!out.has('cache-control')) out.set('cache-control', 'no-store');
+  return new Response(r.body, { status: r.status, headers: out });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     let path = url.pathname;
     if (url.hostname === WEDDING_HOST) return wedding(req, env, url);
     try {
+      if (path === '/admin' || path.startsWith('/admin/')) return await adminProxy(req, env, url);
       if (path.startsWith('/api/blog/')) return await api(req, env, path);
       if (req.method !== 'GET' && req.method !== 'HEAD') return new Response('Method not allowed', { status: 405 });
       if (path === '/blog/') return Response.redirect(SITE + '/blog', 301);
@@ -385,7 +412,7 @@ export default {
       if (path === '/sitemap.xml') return await sitemap(env, url);
       // One admin for everything (17 Nov 2026): the blog editor moved into the main admin.
       if (path === '/blog-admin' || path === '/blog-admin/' || path === '/blog-admin.html') {
-        return new Response(null, { status: 302, headers: { Location: 'https://bot.navifexpro.com/admin/blog', 'Cache-Control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
+        return new Response(null, { status: 302, headers: { Location: '/admin/blog', 'Cache-Control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       }
       if (path === '/blog-template' || path === '/blog-template.html') return new Response('Not found', { status: 404 });
       return env.ASSETS.fetch(req);
